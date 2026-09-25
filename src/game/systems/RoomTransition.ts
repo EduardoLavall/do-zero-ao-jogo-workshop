@@ -1,8 +1,8 @@
 export type RoomExitDirection = "previous" | "next" | null;
 
-export const EXIT_ZONE_WIDTH = 72;
+export const EXIT_ZONE_WIDTH = 22;
 export const ENTRY_OFFSET = 140;
-export const SAFE_AREA_MARGIN = 96;
+export const SAFE_AREA_MARGIN = 29;
 
 export function resolveRoomExit(
   playerX: number,
