@@ -13,20 +13,20 @@ Legenda:
 
 - [x] **P0** Inicializar Vite + TypeScript + Phaser
 - [x] **P0** TypeScript strict
-- [ ] **P0** Configurar ESLint e Prettier
-- [ ] **P0** Configurar Vitest
-- [ ] **P0** Scripts: dev, build, typecheck, lint, test
+- [x] **P0** Configurar ESLint e Prettier
+- [x] **P0** Configurar Vitest
+- [x] **P0** Scripts: dev, build, typecheck, lint, test
 - [ ] **P1** Estrutura inicial de diretórios
 - [x] **P1** Placeholder Presentation Scene
 
 ## Fase 1 — Presentation Core
 
-- [ ] **P0** Definir tipos de Room/Hotspot/Objective
-- [ ] **P0** PresentationState
-- [ ] **P0** PresentationController
-- [ ] **P0** Room registry data-driven
-- [ ] **P1** next/previous/reset
-- [ ] **P1** eventos tipados
+- [x] **P0** Definir tipos de Room/Hotspot/Objective
+- [x] **P0** PresentationState
+- [x] **P0** PresentationController
+- [x] **P0** Room registry data-driven
+- [x] **P1** next/previous/reset
+- [x] **P1** eventos tipados
 - [ ] **P1** dev room switcher
 
 ## Fase 2 — Game Shell
