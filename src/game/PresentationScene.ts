@@ -14,7 +14,7 @@ import {
 } from "./systems/RoomTransition";
 import type { RoomExitDirection } from "./systems/RoomTransition";
 
-const GROUND_HEIGHT = 150;
+const GROUND_HEIGHT = 45;
 function getPlayerStartY(): number {
   return GAME_HEIGHT - GROUND_HEIGHT - 54;
 }
@@ -116,18 +116,18 @@ export class PresentationScene extends Phaser.Scene {
     }
 
     this.previousExitText = this.add
-      .text(34, GAME_HEIGHT / 2, "← PREVIOUS", {
+      .text(16, GAME_HEIGHT / 2, "← PREVIOUS", {
         fontFamily: "monospace",
-        fontSize: "20px",
+        fontSize: "14px",
         color: "#64748b",
       })
       .setOrigin(0, 0.5)
       .setAngle(-90);
 
     this.nextExitText = this.add
-      .text(GAME_WIDTH - 34, GAME_HEIGHT / 2, "NEXT →", {
+      .text(GAME_WIDTH - 16, GAME_HEIGHT / 2, "NEXT →", {
         fontFamily: "monospace",
-        fontSize: "20px",
+        fontSize: "14px",
         color: "#64748b",
       })
       .setOrigin(1, 0.5)
