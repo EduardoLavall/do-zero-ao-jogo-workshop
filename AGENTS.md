@@ -44,6 +44,17 @@ A implementação deve usar coordenadas de mundo e uma pequena dead zone horizon
 
 Teclado não é a navegação principal do player. Ele existe como fallback de apresentação.
 
+## Modelo espacial canônico
+
+- cada Slide Room é uma viewport fixa de 1280×720;
+- a câmera permanece fixa dentro da room;
+- não implementar sidescroller contínuo como arquitetura principal;
+- cruzar a borda direita avança para a próxima room;
+- cruzar a borda esquerda volta para a room anterior;
+- após a troca, reposicionar o player na borda oposta;
+- usar lock de transição para evitar double-trigger;
+- fallback da apresentação nunca depende das exit zones.
+
 ## Regras de implementação
 
 - TypeScript em modo strict.
