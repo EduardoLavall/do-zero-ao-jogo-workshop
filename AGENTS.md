@@ -29,12 +29,28 @@ Consulte `docs/PLANO-MESTRE.md` para conteúdo e comportamento das rooms.
 
 Não adicionar React, Vue, Angular ou outra engine sem uma decisão arquitetural documentada.
 
+## Controles canônicos do player
+
+O player é **mouse-first**:
+
+- cursor à direita do player → mover para direita;
+- cursor à esquerda → mover para esquerda;
+- X aproximadamente igual → parar / idle;
+- botão esquerdo → atirar flecha;
+- botão direito → pular;
+- botão do meio → toggle do controle do player ON/OFF.
+
+A implementação deve usar coordenadas de mundo e uma pequena dead zone horizontal para evitar jitter.
+
+Teclado não é a navegação principal do player. Ele existe como fallback de apresentação.
+
 ## Regras de implementação
 
 - TypeScript em modo strict.
 - Preferir módulos pequenos e nomes explícitos.
 - Evitar singletons globais quando um serviço simples ou estado explícito resolver.
 - Separar **game world**, **presentation state** e **DOM UI**.
+- Leitura de pointer deve ficar centralizada no `InputController`; evitar input espalhado por Player/Rooms.
 - Conteúdo de rooms deve ser data-driven sempre que possível.
 - Não hardcodar lógica específica de uma room dentro do player.
 - Toda navegação deve possuir fallback por teclado.
