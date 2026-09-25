@@ -54,7 +54,8 @@ Entregas:
 
 - player placeholder;
 - movimento horizontal mouse-first;
-- viewport fixa 1280×720;
+- canvas lógico 1920×1080 em proporção 16:9;
+- scaling responsivo com `Phaser.Scale.FIT`;
 - câmera fixa;
 - limites de room;
 - exit zones esquerda/direita;
