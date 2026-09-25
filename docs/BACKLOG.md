@@ -16,7 +16,7 @@ Legenda:
 - [x] **P0** Configurar ESLint e Prettier
 - [x] **P0** Configurar Vitest
 - [x] **P0** Scripts: dev, build, typecheck, lint, test
-- [ ] **P1** Estrutura inicial de diretórios
+- [x] **P1** Estrutura inicial de diretórios
 - [x] **P1** Placeholder Presentation Scene
 
 ## Fase 1 — Presentation Core
@@ -31,24 +31,24 @@ Legenda:
 
 ## Fase 2 — Game Shell
 
-- [ ] **P1** Player placeholder
-- [ ] **P1** InputController mouse-first
-- [ ] **P1** Converter pointer para world X
-- [ ] **P1** Mouse-follow horizontal com dead zone
-- [ ] **P1** Idle quando player X ≈ cursor X
-- [ ] **P1** Botão direito → jump
-- [ ] **P1** Botão esquerdo → shoot
-- [ ] **P1** Botão do meio → toggle player control
-- [ ] **P1** Feedback visual do control ON/OFF
-- [ ] **P1** Camera follow
-- [ ] **P1** room bounds
+- [x] **P1** Player placeholder
+- [x] **P1** InputController mouse-first
+- [x] **P1** Converter pointer para world X
+- [x] **P1** Mouse-follow horizontal com dead zone
+- [x] **P1** Idle quando player X ≈ cursor X
+- [x] **P1** Botão direito → jump
+- [x] **P1** Botão esquerdo → shoot request
+- [x] **P1** Botão do meio → toggle player control
+- [x] **P1** Feedback visual do control ON/OFF
+- [x] **P1** Camera follow
+- [x] **P1** room bounds
 - [ ] **P1** porta/exit
 - [ ] **P1** mudança de room
 
 ## Fase 3 — Interaction Core
 
 - [ ] **P0** HotspotSystem
-- [ ] **P0** mouse world coordinates
+- [x] **P0** mouse world coordinates
 - [ ] **P0** aim assist
 - [ ] **P1** Arrow entity
 - [ ] **P1** shoot animation placeholder
