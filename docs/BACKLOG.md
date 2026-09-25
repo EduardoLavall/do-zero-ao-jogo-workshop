@@ -40,16 +40,16 @@ Legenda:
 - [x] **P1** Botão esquerdo → shoot request
 - [x] **P1** Botão do meio → toggle player control
 - [x] **P1** Feedback visual do control ON/OFF
-- [ ] **P1** Remover camera follow e manter câmera fixa
-- [ ] **P1** Room lógica 1920×1080 / bounds por viewport
-- [ ] **P1** Scaling responsivo 16:9 com Phaser FIT
-- [ ] **P1** Safe area interna da room
-- [ ] **P1** Exit zone esquerda
-- [ ] **P1** Exit zone direita
-- [ ] **P1** Troca de room ao cruzar borda
-- [ ] **P1** Reposicionar player na borda oposta
-- [ ] **P1** Lock contra double-trigger
-- [ ] **P1** Fade/transição simples entre rooms
+- [x] **P1** Remover camera follow e manter câmera fixa
+- [x] **P1** Room lógica 1920×1080 / bounds por viewport
+- [x] **P1** Scaling responsivo 16:9 com Phaser FIT
+- [x] **P1** Safe area interna da room
+- [x] **P1** Exit zone esquerda
+- [x] **P1** Exit zone direita
+- [x] **P1** Troca de room ao cruzar borda
+- [x] **P1** Reposicionar player na borda oposta
+- [x] **P1** Lock contra double-trigger
+- [x] **P1** Fade/transição simples entre rooms
 
 ## Fase 3 — Interaction Core
 

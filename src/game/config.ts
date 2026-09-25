@@ -2,10 +2,10 @@ import Phaser from "phaser";
 
 import { PresentationScene } from "./PresentationScene";
 
-export const GAME_WIDTH = 1280;
-export const GAME_HEIGHT = 720;
-export const WORLD_WIDTH = 2400;
-export const WORLD_HEIGHT = 720;
+export const GAME_WIDTH = 1920;
+export const GAME_HEIGHT = 1080;
+export const WORLD_WIDTH = GAME_WIDTH;
+export const WORLD_HEIGHT = GAME_HEIGHT;
 
 export function createGameConfig(parent: string): Phaser.Types.Core.GameConfig {
   return {
@@ -19,7 +19,7 @@ export function createGameConfig(parent: string): Phaser.Types.Core.GameConfig {
     physics: {
       default: "arcade",
       arcade: {
-        gravity: { x: 0, y: 1200 },
+        gravity: { x: 0, y: 1500 },
         debug: false,
       },
     },

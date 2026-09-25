@@ -4,14 +4,14 @@ export const roomRegistry: readonly RoomDefinition[] = [
   {
     id: "room-01",
     title: "Room 01",
-    width: 1280,
+    width: 1920,
     objectives: [],
     hotspots: [],
   },
   {
     id: "room-02",
     title: "Room 02",
-    width: 1280,
+    width: 1920,
     objectives: [],
     hotspots: [],
   },
