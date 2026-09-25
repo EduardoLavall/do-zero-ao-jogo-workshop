@@ -53,7 +53,7 @@ Responsável por:
 # Fluxo principal
 
 ```text
-Input
+Mouse / Presentation fallback
   ↓
 InputController
   ↓
@@ -70,6 +70,66 @@ Reveal event
 
 ---
 
+# InputController — contrato principal
+
+O player é **mouse-driven**.
+
+O `InputController` deve traduzir o mouse em intenções de gameplay explícitas:
+
+```text
+pointer.x
+↓
+targetWorldX
+↓
+moveLeft / moveRight / idle
+```
+
+Botões:
+
+```text
+Left Button   → shoot
+Right Button  → jump
+Middle Button → toggle player control
+```
+
+Não espalhar leitura direta de mouse por entidades e rooms. O player deve receber intenções/estado do `InputController`.
+
+## Mouse follow no eixo X
+
+Regra:
+
+```text
+targetX > playerX + deadZone
+→ move right
+
+targetX < playerX - deadZone
+→ move left
+
+abs(targetX - playerX) <= deadZone
+→ stop / idle
+```
+
+Usar coordenadas de mundo, não apenas screen-space, porque a câmera pode se mover.
+
+A `deadZone` evita jitter quando cursor e player ficam praticamente alinhados.
+
+## Toggle de controle
+
+O `InputController` mantém:
+
+```ts
+playerControlEnabled: boolean
+```
+
+Quando `false`:
+
+- movimento por cursor fica desabilitado;
+- jump e shoot do player também devem ser ignorados, salvo decisão explícita futura;
+- fallback de apresentação continua funcionando;
+- UI recebe evento/estado para exibir feedback de controle desativado.
+
+---
+
 # Estrutura alvo
 
 ```text
@@ -77,7 +137,7 @@ src/
 ├── main.ts
 ├── game/
 │   ├── config.ts
-│   ├── GameScene.ts
+│   ├── PresentationScene.ts
 │   ├── entities/
 │   │   ├── Player.ts
 │   │   └── Arrow.ts
@@ -107,69 +167,18 @@ src/
 
 ---
 
-# Modelos de dados
-
-## RoomDefinition
-
-```ts
-interface RoomDefinition {
-  id: string;
-  title: string;
-  width: number;
-  objectives: ObjectiveDefinition[];
-  hotspots: HotspotDefinition[];
-}
-```
-
-## HotspotDefinition
-
-```ts
-interface HotspotDefinition {
-  id: string;
-  x: number;
-  y: number;
-  radius: number;
-  revealId: string;
-  required?: string[];
-}
-```
-
-## PresentationState
-
-```ts
-interface PresentationState {
-  roomId: string;
-  revealed: Set<string>;
-  completedObjectives: Set<string>;
-  started: boolean;
-  credits: boolean;
-}
-```
-
-Os tipos reais podem evoluir, mas preservar a separação conceitual.
-
----
-
-# Scenes do Phaser
-
-Inicialmente manter o mínimo:
-
-- `BootScene` / preload
-- `PresentationScene` — todas as Slide Rooms no mesmo mundo ou carregadas por dados
-
-Evitar uma Scene diferente para cada conteúdo se isso gerar boilerplate.
-
-Rooms devem ser **dados**, não subclasses.
-
----
-
 # Navegação
 
-Sempre oferecer:
+Gameplay:
+- movimento horizontal seguindo cursor;
+- botão direito pula;
+- botão esquerdo atira;
+- botão do meio ativa/desativa controle;
+- portas representam progressão visual.
 
-- gameplay: andar e abrir porta;
-- presentation fallback: próxima/anterior room;
-- reset da room;
+Fallback de apresentação:
+- próxima/anterior room;
+- reset;
 - jump direto para room por debug/dev.
 
 A progressão visual pode exigir objetivos, mas fallback de apresentação nunca deve ser bloqueado.
@@ -187,7 +196,9 @@ Ele é um alvo interativo com:
 - reveal associado;
 - estado locked/unlocked/revealed.
 
-Aim assist resolve o hotspot mais próximo do clique dentro de uma tolerância.
+Aim assist resolve o hotspot mais próximo do clique esquerdo dentro de uma tolerância.
+
+Importante: o mesmo pointer controla o target X do personagem e a mira. Atirar não deve criar efeitos colaterais indesejados no movimento; o player continua usando o X do cursor como alvo de movimento.
 
 ---
 
@@ -230,6 +241,7 @@ Preferir eventos explícitos pequenos:
 - `objective:completed`
 - `presentation:next`
 - `presentation:reset`
+- `player-control:changed`
 
 Evitar event bus genérico usado para tudo sem tipagem.
 
@@ -242,11 +254,14 @@ O primeiro marco precisa funcionar apenas com retângulos:
 - tela inicial;
 - Enter;
 - player placeholder;
-- movimento;
+- mouse-follow horizontal;
+- idle ao alinhar com cursor;
+- botão direito para pular;
+- botão esquerdo para atirar;
+- botão do meio para toggle de controle;
 - câmera;
 - duas rooms;
 - hotspot;
-- clique;
 - flecha;
 - reveal;
 - HUD;
