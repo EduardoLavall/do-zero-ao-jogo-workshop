@@ -48,18 +48,20 @@ Entregas:
 
 # Fase 2 — Game Shell
 
-Objetivo: transformar a apresentação em sidescroller.
+Objetivo: transformar a apresentação em Slide Rooms fixas e navegáveis.
 
 Entregas:
 
 - player placeholder;
-- movimento horizontal;
-- câmera follow;
+- movimento horizontal mouse-first;
+- viewport fixa 1280×720;
+- câmera fixa;
 - limites de room;
-- porta/exit;
-- entrada em room.
+- exit zones esquerda/direita;
+- transição entre rooms;
+- reposicionamento do player na borda oposta.
 
-**DoD:** player percorre duas rooms sem arte final.
+**DoD:** player atravessa lateralmente entre duas rooms fixas sem arte final.
 
 ---
 
