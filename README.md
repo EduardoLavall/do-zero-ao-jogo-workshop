@@ -79,3 +79,38 @@ npm run test:watch
 ## Estado atual
 
 Fundação Vite + TypeScript + Phaser criada. O projeto está preparando o núcleo de apresentação antes das Slide Rooms finais.
+
+
+## GitHub Pages
+
+O projeto é publicado automaticamente no GitHub Pages quando houver push/merge na `main`.
+
+URL esperada:
+
+`https://eduardolavall.github.io/do-zero-ao-jogo-workshop/`
+
+Pipeline:
+
+```text
+push/merge em main
+↓
+typecheck
+↓
+lint
+↓
+test
+↓
+build
+↓
+upload de dist/
+↓
+GitHub Pages
+```
+
+### Configuração inicial do repositório
+
+No GitHub:
+
+`Settings → Pages → Build and deployment → Source → GitHub Actions`
+
+Observação: enquanto o repositório não possuir `package-lock.json`, o workflow usa `npm install`. Quando o lockfile for versionado, deve-se preferir `npm ci`.
