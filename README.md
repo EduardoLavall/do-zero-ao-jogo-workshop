@@ -42,6 +42,40 @@ Leia antes de implementar:
 
 O MVP precisa funcionar mesmo com placeholders geométricos.
 
+## Desenvolvimento
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Inicie o servidor local:
+
+```bash
+npm run dev
+```
+
+## Validação
+
+Antes de considerar uma mudança concluída:
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
+
+Comandos adicionais:
+
+```bash
+npm run lint:fix
+npm run format
+npm run format:check
+npm run test:watch
+```
+
 ## Estado atual
 
-Fase de arquitetura e planejamento. As primeiras issues implementam o núcleo técnico antes das Slide Rooms finais.
+Fundação Vite + TypeScript + Phaser criada. O projeto está preparando o núcleo de apresentação antes das Slide Rooms finais.
