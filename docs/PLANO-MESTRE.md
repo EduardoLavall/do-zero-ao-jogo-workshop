@@ -4,7 +4,7 @@
 > Workshop: **Do Zero ao Jogo: Introdução ao Desenvolvimento de Games**  
 > Duração alvo: **~15 minutos**  
 > Formato: HTML/CSS/JavaScript, offline, interativo.  
-> Conceito principal: **Slide Rooms** — a apresentação começa como slides e rapidamente se transforma em um sidescroller 2D no qual o apresentador controla um personagem que percorre salas temáticas e revela conteúdos interativos.
+> Conceito principal: **Slide Rooms** — a apresentação começa como slides e se transforma em uma sequência de salas 2D fixas, cada uma funcionando como um “slide jogável” em 16:9. O apresentador controla um personagem dentro da room e troca de sala atravessando as bordas laterais.
 
 ---
 
@@ -94,7 +94,7 @@ Elementos:
 - som ambiente discreto;
 - “Press Enter” piscando.
 
-Ao apertar Enter, a apresentação tradicional “vira” o sidescroller.
+Ao apertar Enter, a apresentação tradicional “vira” a primeira Slide Room jogável.
 
 ---
 
@@ -1114,6 +1114,19 @@ Total alvo: **~15 min**.
 ---
 
 # 39. Arquitetura técnica dos slides
+
+## Modelo espacial
+
+Cada Slide Room ocupa uma viewport fixa de **1280×720**.
+
+```text
+ROOM N
+[← exit | conteúdo + hotspots | exit →]
+```
+
+A câmera não acompanha o player. Quando ele cruza uma exit zone lateral, o PresentationController troca de room e o player reaparece no lado oposto da nova tela.
+
+Esse modelo prioriza composição previsível, legibilidade em projetor e comportamento de “slide jogável”.
 
 Recomendação:
 
