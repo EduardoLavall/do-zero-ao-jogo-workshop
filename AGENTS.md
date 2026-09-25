@@ -46,7 +46,10 @@ Teclado não é a navegação principal do player. Ele existe como fallback de a
 
 ## Modelo espacial canônico
 
-- cada Slide Room é uma viewport fixa de 1280×720;
+- cada Slide Room usa canvas lógico 1920×1080 em proporção 16:9;
+- escalar responsivamente com `Phaser.Scale.FIT`;
+- preservar coordenadas lógicas estáveis para player, hotspots e conteúdo;
+- usar safe area interna para conteúdo essencial;
 - a câmera permanece fixa dentro da room;
 - não implementar sidescroller contínuo como arquitetura principal;
 - cruzar a borda direita avança para a próxima room;
