@@ -15,7 +15,9 @@ import {
 import type { RoomExitDirection } from "./systems/RoomTransition";
 
 const GROUND_HEIGHT = 150;
-const PLAYER_START_Y = GAME_HEIGHT - GROUND_HEIGHT - 54;
+function getPlayerStartY(): number {
+  return GAME_HEIGHT - GROUND_HEIGHT - 54;
+}
 const TRANSITION_DURATION = 180;
 
 export class PresentationScene extends Phaser.Scene {
@@ -131,7 +133,7 @@ export class PresentationScene extends Phaser.Scene {
       .setOrigin(1, 0.5)
       .setAngle(90);
 
-    this.player = new Player(this, ENTRY_OFFSET, PLAYER_START_Y);
+    this.player = new Player(this, ENTRY_OFFSET, getPlayerStartY());
     this.physics.add.collider(this.player.view, this.ground);
 
     this.inputController = new InputController(this);
@@ -221,7 +223,7 @@ export class PresentationScene extends Phaser.Scene {
 
     if (this.resetKey && Phaser.Input.Keyboard.JustDown(this.resetKey)) {
       this.presentationController.resetRoom();
-      this.player?.setPosition(ENTRY_OFFSET, PLAYER_START_Y);
+      this.player?.setPosition(ENTRY_OFFSET, getPlayerStartY());
       this.flashAction("ROOM RESET");
     }
   }
@@ -257,7 +259,7 @@ export class PresentationScene extends Phaser.Scene {
       }
 
       this.updateRoomVisuals();
-      this.player.setPosition(getEntryX(direction, GAME_WIDTH), PLAYER_START_Y);
+      this.player.setPosition(getEntryX(direction, GAME_WIDTH), getPlayerStartY());
       this.cameras.main.setScroll(0, 0);
       this.cameras.main.fadeIn(TRANSITION_DURATION, 0, 0, 0);
 
