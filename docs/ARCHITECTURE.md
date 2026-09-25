@@ -16,7 +16,7 @@ Responsável por:
 - Arrow
 - Hotspots espaciais
 - Rooms
-- Camera
+- Camera fixa por room
 - Physics
 - Tweens
 - Particles
@@ -109,7 +109,7 @@ abs(targetX - playerX) <= deadZone
 → stop / idle
 ```
 
-Usar coordenadas de mundo, não apenas screen-space, porque a câmera pode se mover.
+Usar coordenadas de mundo da room atual. A câmera é fixa, mas o contrato continua em world coordinates para manter o input desacoplado de screen-space.
 
 A `deadZone` evita jitter quando cursor e player ficam praticamente alinhados.
 
@@ -167,6 +167,33 @@ src/
 
 ---
 
+# Modelo de Slide Rooms
+
+Cada room é uma **viewport fixa 16:9 de 1280×720**.
+
+Não existe sidescroller contínuo como modelo principal. A câmera permanece fixa enquanto o player se move dentro da room atual.
+
+```text
+ROOM A (1280×720)
+[player ......................... →]
+                         cruza borda direita
+                                  ↓
+                             nextRoom()
+                                  ↓
+ROOM B (1280×720)
+[← player ........................]
+```
+
+Regras:
+- câmera fixa;
+- uma room por viewport;
+- sair pela direita → próxima room;
+- sair pela esquerda → room anterior;
+- player reaparece pela borda oposta;
+- transição visual simples pode usar fade;
+- transição deve possuir lock para evitar double-trigger;
+- primeira/última room respeitam os limites do registry.
+
 # Navegação
 
 Gameplay:
@@ -174,7 +201,7 @@ Gameplay:
 - botão direito pula;
 - botão esquerdo atira;
 - botão do meio ativa/desativa controle;
-- portas representam progressão visual.
+- exit zones laterais controlam troca de room.
 
 Fallback de apresentação:
 - próxima/anterior room;
@@ -259,8 +286,10 @@ O primeiro marco precisa funcionar apenas com retângulos:
 - botão direito para pular;
 - botão esquerdo para atirar;
 - botão do meio para toggle de controle;
-- câmera;
-- duas rooms;
+- câmera fixa;
+- duas rooms fixas 16:9;
+- exit zones esquerda/direita;
+- transição entre rooms;
 - hotspot;
 - flecha;
 - reveal;
