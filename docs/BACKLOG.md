@@ -11,13 +11,13 @@ Legenda:
 
 ## Fase 0 — Fundação
 
-- [ ] **P0** Inicializar Vite + TypeScript + Phaser
-- [ ] **P0** TypeScript strict
+- [x] **P0** Inicializar Vite + TypeScript + Phaser
+- [x] **P0** TypeScript strict
 - [ ] **P0** Configurar ESLint e Prettier
 - [ ] **P0** Configurar Vitest
 - [ ] **P0** Scripts: dev, build, typecheck, lint, test
 - [ ] **P1** Estrutura inicial de diretórios
-- [ ] **P1** Placeholder Boot/Presentation Scene
+- [x] **P1** Placeholder Presentation Scene
 
 ## Fase 1 — Presentation Core
 
@@ -32,8 +32,14 @@ Legenda:
 ## Fase 2 — Game Shell
 
 - [ ] **P1** Player placeholder
-- [ ] **P1** InputController
-- [ ] **P1** movimento horizontal
+- [ ] **P1** InputController mouse-first
+- [ ] **P1** Converter pointer para world X
+- [ ] **P1** Mouse-follow horizontal com dead zone
+- [ ] **P1** Idle quando player X ≈ cursor X
+- [ ] **P1** Botão direito → jump
+- [ ] **P1** Botão esquerdo → shoot
+- [ ] **P1** Botão do meio → toggle player control
+- [ ] **P1** Feedback visual do control ON/OFF
 - [ ] **P1** Camera follow
 - [ ] **P1** room bounds
 - [ ] **P1** porta/exit
