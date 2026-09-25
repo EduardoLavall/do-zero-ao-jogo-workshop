@@ -40,10 +40,14 @@ Legenda:
 - [x] **P1** Botão esquerdo → shoot request
 - [x] **P1** Botão do meio → toggle player control
 - [x] **P1** Feedback visual do control ON/OFF
-- [x] **P1** Camera follow
-- [x] **P1** room bounds
-- [ ] **P1** porta/exit
-- [ ] **P1** mudança de room
+- [ ] **P1** Remover camera follow e manter câmera fixa
+- [ ] **P1** Room fixa 1280×720 / bounds por viewport
+- [ ] **P1** Exit zone esquerda
+- [ ] **P1** Exit zone direita
+- [ ] **P1** Troca de room ao cruzar borda
+- [ ] **P1** Reposicionar player na borda oposta
+- [ ] **P1** Lock contra double-trigger
+- [ ] **P1** Fade/transição simples entre rooms
 
 ## Fase 3 — Interaction Core
 
