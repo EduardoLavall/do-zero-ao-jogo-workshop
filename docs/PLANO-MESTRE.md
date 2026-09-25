@@ -31,9 +31,10 @@ A história dos jogos entra apenas como contexto. O foco principal é **como jog
 
 O personagem:
 
-- anda lateralmente;
-- mira com o mouse;
-- atira flechas;
+- se move horizontalmente seguindo o cursor do mouse;
+- pula com o botão direito;
+- atira flechas com o botão esquerdo;
+- pode ter o controle ligado/desligado com o botão do meio;
 - acerta painéis, ícones e nós;
 - revela conteúdo;
 - desbloqueia novas informações;
@@ -97,15 +98,59 @@ Ao apertar Enter, a apresentação tradicional “vira” o sidescroller.
 
 ---
 
-# 5. Controles
+# 5. Controles do player
 
-- **A / D** ou setas → mover;
-- mouse → mirar;
-- clique esquerdo → atirar flecha;
+O controle principal do personagem é feito **inteiramente com o mouse**.
+
+## Movimento horizontal — mouse follow
+
+O cursor define o alvo horizontal do personagem.
+
+```text
+cursor.x > player.x
+→ player anda para a direita
+
+cursor.x < player.x
+→ player anda para a esquerda
+
+cursor.x ≈ player.x
+→ player para e entra em idle
+```
+
+O player deve se mover até aproximar seu X do X do cursor dentro de uma pequena tolerância/dead zone, evitando jitter.
+
+### Comportamento esperado
+
+- cursor à direita → animação/movimento para direita;
+- cursor à esquerda → animação/movimento para esquerda;
+- cursor alinhado → velocidade horizontal zero + idle;
+- o personagem deve olhar para a direção do movimento/alvo quando fizer sentido.
+
+## Botões do mouse
+
+- **Botão esquerdo** → atirar flecha;
+- **Botão direito** → pular;
+- **Botão do meio** → toggle do controle do player ON/OFF.
+
+## Toggle de controle
+
+Quando o controle estiver **OFF**:
+
+- o player para de seguir o cursor;
+- cliques não devem mover o personagem;
+- a apresentação continua utilizável;
+- o estado ON/OFF deve possuir feedback visual discreto no HUD.
+
+Quando voltar para **ON**, o player volta a seguir o cursor normalmente.
+
+## Controles de apresentação / fallback
+
+O teclado continua existindo apenas como fallback da apresentação:
+
 - Enter → confirmar/iniciar;
 - ESC → fechar overlay;
 - F → fullscreen;
-- N / P → fallback próxima/anterior room;
+- N / P → próxima/anterior room;
 - R → reset da room.
 
 O personagem não pode morrer, cair ou travar a apresentação.
@@ -115,9 +160,11 @@ O personagem não pode morrer, cair ou travar a apresentação.
 # 6. Mecânica da flecha
 
 ```text
-Mouse click
+Left click
 ↓
-Personagem mira
+resolve hotspot
+↓
+personagem mira
 ↓
 Arrow spawn
 ↓
@@ -139,6 +186,8 @@ Quando um alvo é atingido:
 - objetivo pode ser marcado como concluído.
 
 A flecha deve possuir aim assist para sempre acertar hotspots válidos.
+
+Importante: o clique esquerdo serve para atirar, não para movimentar diretamente o player. O movimento vem continuamente da posição X do cursor.
 
 ---
 
@@ -525,7 +574,7 @@ Pergunta:
 Explicação de alto nível:
 
 ```text
-TECLADO
+TECLADO / MOUSE
 ↓
 Sistema Operacional / Driver
 ↓
@@ -1088,48 +1137,16 @@ Recomendação:
 - menus;
 - progresso.
 
-Estrutura sugerida:
-
-```text
-workshop/
-│
-├── index.html
-├── css/
-│   ├── base.css
-│   ├── world.css
-│   ├── ui.css
-│   └── rooms.css
-├── js/
-│   ├── game.js
-│   ├── player.js
-│   ├── rooms.js
-│   ├── interaction.js
-│   ├── arrows.js
-│   ├── audio.js
-│   ├── effects.js
-│   └── presentation.js
-├── assets/
-│   ├── character/
-│   ├── rooms/
-│   ├── sprites/
-│   ├── games/
-│   ├── consoles/
-│   ├── icons/
-│   ├── sounds/
-│   ├── music/
-│   └── fonts/
-└── docs/
-    ├── PLANO-MESTRE.md
-    └── FONTES.md
-```
-
 ---
 
 # 40. Regras de implementação
 
 - cada clique deve revelar uma ideia;
 - personagem não pode bloquear a apresentação;
-- sempre existir fallback de teclado;
+- controle principal do player é via mouse;
+- teclado é fallback da apresentação, não navegação principal do player;
+- botão esquerdo atira, direito pula e botão do meio liga/desliga o controle;
+- sempre existir fallback de teclado para navegação da apresentação;
 - conteúdo técnico deve ter **conceito → exemplo → diagrama → código → efeito no jogo**;
 - história deve ser curta;
 - se houver disputa de tempo, ganha o conteúdo técnico;
