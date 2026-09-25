@@ -169,24 +169,29 @@ src/
 
 # Modelo de Slide Rooms
 
-Cada room é uma **viewport fixa 16:9 de 1280×720**.
+Cada room usa um **canvas lógico 16:9 de 1920×1080**, escalado responsivamente para caber no viewport.
 
 Não existe sidescroller contínuo como modelo principal. A câmera permanece fixa enquanto o player se move dentro da room atual.
 
 ```text
-ROOM A (1280×720)
+ROOM A (1920×1080 lógico)
 [player ......................... →]
                          cruza borda direita
                                   ↓
                              nextRoom()
                                   ↓
-ROOM B (1280×720)
+ROOM B (1920×1080 lógico)
 [← player ........................]
 ```
 
 Regras:
 - câmera fixa;
 - uma room por viewport;
+- resolução lógica 1920×1080;
+- scaling responsivo com `Phaser.Scale.FIT`;
+- manter proporção 16:9;
+- nunca reposicionar conteúdo principal com layout percentual solto;
+- usar safe area interna para textos, hotspots e elementos essenciais;
 - sair pela direita → próxima room;
 - sair pela esquerda → room anterior;
 - player reaparece pela borda oposta;
@@ -287,7 +292,7 @@ O primeiro marco precisa funcionar apenas com retângulos:
 - botão esquerdo para atirar;
 - botão do meio para toggle de controle;
 - câmera fixa;
-- duas rooms fixas 16:9;
+- duas rooms fixas 16:9 com canvas lógico 1920×1080;
 - exit zones esquerda/direita;
 - transição entre rooms;
 - hotspot;
