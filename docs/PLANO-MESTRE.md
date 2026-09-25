@@ -1117,7 +1117,7 @@ Total alvo: **~15 min**.
 
 ## Modelo espacial
 
-Cada Slide Room ocupa uma viewport fixa de **1280×720**.
+Cada Slide Room usa um **canvas lógico de 1920×1080 (16:9)**, escalado responsivamente para caber no navegador/projetor mantendo a proporção.
 
 ```text
 ROOM N
@@ -1126,7 +1126,9 @@ ROOM N
 
 A câmera não acompanha o player. Quando ele cruza uma exit zone lateral, o PresentationController troca de room e o player reaparece no lado oposto da nova tela.
 
-Esse modelo prioriza composição previsível, legibilidade em projetor e comportamento de “slide jogável”.
+Esse modelo prioriza composição previsível, legibilidade em projetor e comportamento de “slide jogável”. O layout é desenhado em coordenadas lógicas 1920×1080 e escalado com `Phaser.Scale.FIT`, evitando layout percentual solto para elementos de gameplay.
+
+Usar uma safe area interna para conteúdo essencial, deixando margem visual nas bordas para HUD, exits e variações de viewport.
 
 Recomendação:
 
