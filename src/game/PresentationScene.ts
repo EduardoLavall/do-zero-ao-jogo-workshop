@@ -7,6 +7,7 @@ import { Player } from "./entities/Player";
 import { InputController } from "./systems/InputController";
 import {
   ENTRY_OFFSET,
+  EXIT_ZONE_WIDTH,
   SAFE_AREA_MARGIN,
   getEntryX,
   resolveRoomExit,
@@ -34,6 +35,7 @@ export class PresentationScene extends Phaser.Scene {
   private previousKey?: Phaser.Input.Keyboard.Key;
   private resetKey?: Phaser.Input.Keyboard.Key;
   private transitionLocked = false;
+  private blockedExitDirection: Exclude<RoomExitDirection, null> | null = null;
 
   public constructor() {
     super({ key: "presentation" });
@@ -192,7 +194,15 @@ export class PresentationScene extends Phaser.Scene {
       this.handleFallbackNavigation();
 
       const exitDirection = resolveRoomExit(this.player.x, GAME_WIDTH);
-      if (exitDirection) {
+
+      if (!exitDirection) {
+        this.blockedExitDirection = null;
+      } else if (this.blockedExitDirection === exitDirection) {
+        const boundaryX =
+          exitDirection === "next" ? GAME_WIDTH - EXIT_ZONE_WIDTH : EXIT_ZONE_WIDTH;
+        this.player.setPosition(boundaryX, this.player.y);
+        this.player.stopHorizontal();
+      } else {
         this.requestRoomTransition(exitDirection);
       }
     }
@@ -227,7 +237,9 @@ export class PresentationScene extends Phaser.Scene {
         : this.presentationController.previousRoom();
 
     if (!navigated) {
-      const boundaryX = direction === "next" ? GAME_WIDTH - ENTRY_OFFSET : ENTRY_OFFSET;
+      const boundaryX =
+        direction === "next" ? GAME_WIDTH - EXIT_ZONE_WIDTH : EXIT_ZONE_WIDTH;
+      this.blockedExitDirection = direction;
       this.player.setPosition(boundaryX, this.player.y);
       this.player.stopHorizontal();
       this.flashAction(direction === "next" ? "LAST ROOM" : "FIRST ROOM");
@@ -235,6 +247,7 @@ export class PresentationScene extends Phaser.Scene {
     }
 
     this.transitionLocked = true;
+    this.blockedExitDirection = null;
     this.player.stopHorizontal();
     this.cameras.main.fadeOut(TRANSITION_DURATION, 0, 0, 0);
 
