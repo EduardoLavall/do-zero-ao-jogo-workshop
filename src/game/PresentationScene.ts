@@ -38,7 +38,7 @@ export class PresentationScene extends Phaser.Scene {
   private previousExitText?: Phaser.GameObjects.Text;
   private nextExitText?: Phaser.GameObjects.Text;
   private readonly hotspotVisuals = new Map<string, Phaser.GameObjects.Arc>();
-  private readonly hotspotLabels: Phaser.GameObjects.Text[] = [];
+  private readonly hotspotDecorations: Phaser.GameObjects.GameObject[] = [];
   private selectedHotspotId?: string;
   private nextKey?: Phaser.Input.Keyboard.Key;
   private previousKey?: Phaser.Input.Keyboard.Key;
@@ -297,15 +297,11 @@ export class PresentationScene extends Phaser.Scene {
   }
 
   private renderHotspots(): void {
-    for (const visual of this.hotspotVisuals.values()) {
-      visual.destroy();
+    for (const decoration of this.hotspotDecorations) {
+      decoration.destroy();
     }
+    this.hotspotDecorations.length = 0;
     this.hotspotVisuals.clear();
-
-    for (const label of this.hotspotLabels) {
-      label.destroy();
-    }
-    this.hotspotLabels.length = 0;
     this.selectedHotspotId = undefined;
 
     const room = this.presentationController.getCurrentRoom();
@@ -341,20 +337,17 @@ export class PresentationScene extends Phaser.Scene {
         .setOrigin(0.5)
         .setDepth(2);
 
-      this.hotspotVisuals.set(hotspot.id, circle);
-      this.hotspotLabels.push(label);
+      const radiusLabel = this.add
+        .text(hotspot.x, hotspot.y + 28, `r=${hotspot.radius}`, {
+          fontFamily: "monospace",
+          fontSize: "14px",
+          color: "#94a3b8",
+        })
+        .setOrigin(0.5)
+        .setDepth(2);
 
-      marker.setData("hotspot-marker", true);
-      this.hotspotLabels.push(
-        this.add
-          .text(hotspot.x, hotspot.y + 28, `r=${hotspot.radius}`, {
-            fontFamily: "monospace",
-            fontSize: "14px",
-            color: "#94a3b8",
-          })
-          .setOrigin(0.5)
-          .setDepth(2),
-      );
+      this.hotspotVisuals.set(hotspot.id, circle);
+      this.hotspotDecorations.push(circle, marker, label, radiusLabel);
     }
   }
 
