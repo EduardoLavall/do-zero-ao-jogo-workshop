@@ -51,6 +51,15 @@ Legenda:
 - [x] **P1** Lock contra double-trigger
 - [x] **P1** Fade/transição simples entre rooms
 
+## Configuração / Tuning
+
+- [x] **P1** Config central versionada de gameplay
+- [x] **P1** Player/Input/Room lendo config central
+- [x] **P1** Projectile speed reservado na config
+- [ ] **P2** Painel F2 de tuning persistente
+- [ ] **P2** Overrides via localStorage
+- [ ] **P2** Reset defaults
+
 ## Fase 3 — Interaction Core
 
 - [x] **P0** HotspotSystem
