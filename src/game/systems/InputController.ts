@@ -23,19 +23,23 @@ export class InputController {
   }
 
   public getState(playerX: number): PlayerInputState {
-    const pointer = this.scene.input.activePointer;
-    const worldPoint = pointer.positionToCamera(this.scene.cameras.main) as Phaser.Math.Vector2;
-    const targetWorldX = worldPoint.x;
+    const worldPoint = this.getPointerWorldPosition();
 
     return {
-      targetWorldX,
+      targetWorldX: worldPoint.x,
+      targetWorldY: worldPoint.y,
       horizontalDirection: this.controlEnabled
-        ? resolveHorizontalDirection(playerX, targetWorldX, this.deadZone)
+        ? resolveHorizontalDirection(playerX, worldPoint.x, this.deadZone)
         : 0,
       jumpRequested: this.consumeJumpRequested(),
       shootRequested: this.consumeShootRequested(),
       controlEnabled: this.controlEnabled,
     };
+  }
+
+  public getPointerWorldPosition(): Phaser.Math.Vector2 {
+    const pointer = this.scene.input.activePointer;
+    return pointer.positionToCamera(this.scene.cameras.main) as Phaser.Math.Vector2;
   }
 
   public destroy(): void {
