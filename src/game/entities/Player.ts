@@ -1,30 +1,30 @@
 import type Phaser from "phaser";
 
+import { gameplayConfig } from "../../config/gameplayConfig";
 import type { PlayerInputState } from "../types";
-
-const PLAYER_WIDTH = 66;
-const PLAYER_HEIGHT = 108;
-const MOVE_SPEED = 520;
-const JUMP_VELOCITY = -760;
 
 export class Player {
   public readonly body: Phaser.Physics.Arcade.Body;
   public readonly view: Phaser.GameObjects.Rectangle;
 
   public constructor(scene: Phaser.Scene, x: number, y: number) {
+    const { width, height } = gameplayConfig.player;
+
     this.view = scene.add
-      .rectangle(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, 0x8be9fd)
+      .rectangle(x, y, width, height, 0x8be9fd)
       .setStrokeStyle(4, 0xf7f3e8);
 
     scene.physics.add.existing(this.view);
 
     this.body = this.view.body as Phaser.Physics.Arcade.Body;
     this.body.setCollideWorldBounds(false);
-    this.body.setSize(PLAYER_WIDTH, PLAYER_HEIGHT);
+    this.body.setSize(width, height);
   }
 
   public update(input: PlayerInputState): void {
-    this.body.setVelocityX(input.horizontalDirection * MOVE_SPEED);
+    this.body.setVelocityX(
+      input.horizontalDirection * gameplayConfig.player.moveSpeed,
+    );
 
     if (input.horizontalDirection < 0) {
       this.view.setScale(-1, 1);
@@ -33,7 +33,7 @@ export class Player {
     }
 
     if (input.jumpRequested && this.body.blocked.down) {
-      this.body.setVelocityY(JUMP_VELOCITY);
+      this.body.setVelocityY(gameplayConfig.player.jumpVelocity);
     }
 
     this.view.setFillStyle(input.controlEnabled ? 0x8be9fd : 0x64748b);

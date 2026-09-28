@@ -167,6 +167,26 @@ src/
 
 ---
 
+# Gameplay tuning
+
+Parâmetros de game feel e navegação devem vir de uma fonte única versionada:
+
+`src/config/gameplayConfig.ts`
+
+Exemplos:
+- player width/height;
+- move speed;
+- jump velocity;
+- mouse dead zone;
+- projectile speed;
+- ground height;
+- room entry offset;
+- exit zone width;
+- safe area margin;
+- transition duration.
+
+Evitar reintroduzir números mágicos equivalentes em Player, InputController, Arrow ou sistemas de room.
+
 # Modelo de Slide Rooms
 
 Cada room usa um **canvas lógico 16:9 de 1920×1080**, escalado responsivamente para caber no viewport.

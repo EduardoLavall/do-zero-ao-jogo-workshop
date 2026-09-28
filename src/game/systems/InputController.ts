@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 
+import { gameplayConfig } from "../../config/gameplayConfig";
 import { resolveHorizontalDirection } from "../types";
 import type { PlayerInputState } from "../types";
 
@@ -14,7 +15,10 @@ export class InputController {
   private jumpRequested = false;
   private shootRequested = false;
 
-  public constructor(scene: Phaser.Scene, deadZone = 18) {
+  public constructor(
+    scene: Phaser.Scene,
+    deadZone = gameplayConfig.player.mouseDeadZone,
+  ) {
     this.scene = scene;
     this.deadZone = deadZone;
 

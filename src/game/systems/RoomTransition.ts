@@ -1,8 +1,10 @@
+import { gameplayConfig } from "../../config/gameplayConfig";
+
 export type RoomExitDirection = "previous" | "next" | null;
 
-export const EXIT_ZONE_WIDTH = 22;
-export const ENTRY_OFFSET = 140;
-export const SAFE_AREA_MARGIN = 29;
+export const EXIT_ZONE_WIDTH = gameplayConfig.room.exitZoneWidth;
+export const ENTRY_OFFSET = gameplayConfig.room.entryOffset;
+export const SAFE_AREA_MARGIN = gameplayConfig.room.safeAreaMargin;
 
 export function resolveRoomExit(
   playerX: number,
