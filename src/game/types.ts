@@ -2,6 +2,7 @@ export type HorizontalDirection = -1 | 0 | 1;
 
 export interface PlayerInputState {
   targetWorldX: number;
+  targetWorldY: number;
   horizontalDirection: HorizontalDirection;
   jumpRequested: boolean;
   shootRequested: boolean;

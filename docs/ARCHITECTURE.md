@@ -228,7 +228,14 @@ Ele é um alvo interativo com:
 - reveal associado;
 - estado locked/unlocked/revealed.
 
-Aim assist resolve o hotspot mais próximo do clique esquerdo dentro de uma tolerância.
+Aim assist resolve o hotspot **available** mais próximo do clique esquerdo dentro do raio/tolerância definido pelo próprio hotspot.
+
+Regras de seleção:
+- `available` → pode ser selecionado;
+- `locked` → ignorado;
+- `revealed` → ignorado para evitar interação repetida;
+- se mais de um hotspot estiver dentro da tolerância, vence o de menor distância ao pointer;
+- se nenhum alvo válido estiver no raio, o resultado é `null`.
 
 Importante: o mesmo pointer controla o target X do personagem e a mira. Atirar não deve criar efeitos colaterais indesejados no movimento; o player continua usando o X do cursor como alvo de movimento.
 

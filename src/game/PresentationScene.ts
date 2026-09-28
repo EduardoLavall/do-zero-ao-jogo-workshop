@@ -6,6 +6,10 @@ import { GAME_HEIGHT, GAME_WIDTH, WORLD_HEIGHT, WORLD_WIDTH } from "./config";
 import { Player } from "./entities/Player";
 import { InputController } from "./systems/InputController";
 import {
+  getHotspotState,
+  resolveHotspotTarget,
+} from "./systems/HotspotSystem";
+import {
   ENTRY_OFFSET,
   EXIT_ZONE_WIDTH,
   SAFE_AREA_MARGIN,
@@ -33,6 +37,9 @@ export class PresentationScene extends Phaser.Scene {
   private actionStatusText?: Phaser.GameObjects.Text;
   private previousExitText?: Phaser.GameObjects.Text;
   private nextExitText?: Phaser.GameObjects.Text;
+  private readonly hotspotVisuals = new Map<string, Phaser.GameObjects.Arc>();
+  private readonly hotspotDecorations: Phaser.GameObjects.GameObject[] = [];
+  private selectedHotspotId?: string;
   private nextKey?: Phaser.Input.Keyboard.Key;
   private previousKey?: Phaser.Input.Keyboard.Key;
   private resetKey?: Phaser.Input.Keyboard.Key;
@@ -189,7 +196,7 @@ export class PresentationScene extends Phaser.Scene {
     }
 
     if (input.shootRequested) {
-      this.flashAction("SHOOT REQUEST");
+      this.resolveTestHotspot(input.targetWorldX, input.targetWorldY);
     }
 
     if (!this.transitionLocked) {
@@ -285,6 +292,106 @@ export class PresentationScene extends Phaser.Scene {
     this.nextExitText
       ?.setText(roomIndex < roomRegistry.length - 1 ? "NEXT →" : "END")
       .setColor(roomIndex < roomRegistry.length - 1 ? "#94a3b8" : "#475569");
+
+    this.renderHotspots();
+  }
+
+  private renderHotspots(): void {
+    for (const decoration of this.hotspotDecorations) {
+      decoration.destroy();
+    }
+    this.hotspotDecorations.length = 0;
+    this.hotspotVisuals.clear();
+    this.selectedHotspotId = undefined;
+
+    const room = this.presentationController.getCurrentRoom();
+    const state = this.presentationController.getState();
+
+    for (const hotspot of room.hotspots) {
+      const hotspotState = getHotspotState(hotspot, state);
+      const fillColor = hotspotState === "locked" ? 0x334155 : 0x1e293b;
+      const strokeColor = hotspotState === "locked" ? 0x64748b : 0xfacc15;
+
+      const circle = this.add
+        .circle(hotspot.x, hotspot.y, hotspot.radius, fillColor, 0.22)
+        .setStrokeStyle(4, strokeColor, 0.9)
+        .setDepth(1);
+
+      const marker = this.add
+        .circle(hotspot.x, hotspot.y, 18, strokeColor, 1)
+        .setDepth(1);
+
+      const label = this.add
+        .text(
+          hotspot.x,
+          hotspot.y - hotspot.radius - 26,
+          `${hotspot.id} · ${hotspotState.toUpperCase()}`,
+          {
+            fontFamily: "monospace",
+            fontSize: "18px",
+            color: hotspotState === "locked" ? "#64748b" : "#facc15",
+            backgroundColor: "#0b1020",
+            padding: { x: 8, y: 5 },
+          },
+        )
+        .setOrigin(0.5)
+        .setDepth(2);
+
+      const radiusLabel = this.add
+        .text(hotspot.x, hotspot.y + 28, `r=${hotspot.radius}`, {
+          fontFamily: "monospace",
+          fontSize: "14px",
+          color: "#94a3b8",
+        })
+        .setOrigin(0.5)
+        .setDepth(2);
+
+      this.hotspotVisuals.set(hotspot.id, circle);
+      this.hotspotDecorations.push(circle, marker, label, radiusLabel);
+    }
+  }
+
+  private resolveTestHotspot(pointerX: number, pointerY: number): void {
+    const room = this.presentationController.getCurrentRoom();
+    const target = resolveHotspotTarget(
+      room.hotspots,
+      pointerX,
+      pointerY,
+      this.presentationController.getState(),
+    );
+
+    this.clearHotspotSelection();
+
+    if (!target) {
+      this.flashAction(room.hotspots.length > 0 ? "NO VALID TARGET" : "SHOOT REQUEST");
+      return;
+    }
+
+    this.selectedHotspotId = target.hotspot.id;
+    this.hotspotVisuals
+      .get(target.hotspot.id)
+      ?.setStrokeStyle(8, 0x86efac, 1);
+
+    this.flashAction(
+      `TARGET: ${target.hotspot.id} · d=${Math.round(target.distance)}`,
+    );
+  }
+
+  private clearHotspotSelection(): void {
+    if (!this.selectedHotspotId) {
+      return;
+    }
+
+    const room = this.presentationController.getCurrentRoom();
+    const hotspot = room.hotspots.find((item) => item.id === this.selectedHotspotId);
+
+    if (hotspot) {
+      const state = getHotspotState(hotspot, this.presentationController.getState());
+      const strokeColor = state === "locked" ? 0x64748b : 0xfacc15;
+      this.hotspotVisuals.get(hotspot.id)?.setStrokeStyle(4, strokeColor, 0.9);
+    }
+
+    this.selectedHotspotId = undefined;
   }
 
   private flashAction(label: string): void {
