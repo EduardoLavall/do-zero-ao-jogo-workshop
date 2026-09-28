@@ -10,10 +10,40 @@ export const roomRegistry: readonly RoomDefinition[] = [
   },
   {
     id: "room-02",
-    title: "Room 02",
+    title: "Interaction Test Room",
     width: 1920,
     objectives: [],
-    hotspots: [],
+    hotspots: [
+      {
+        id: "hotspot-alpha",
+        x: 620,
+        y: 520,
+        radius: 150,
+        revealId: "test-alpha",
+      },
+      {
+        id: "hotspot-beta",
+        x: 980,
+        y: 430,
+        radius: 110,
+        revealId: "test-beta",
+      },
+      {
+        id: "hotspot-gamma",
+        x: 1320,
+        y: 560,
+        radius: 180,
+        revealId: "test-gamma",
+      },
+      {
+        id: "hotspot-locked",
+        x: 1580,
+        y: 390,
+        radius: 130,
+        revealId: "test-locked",
+        requiredRevealIds: ["test-alpha"],
+      },
+    ],
   },
 ];
 
