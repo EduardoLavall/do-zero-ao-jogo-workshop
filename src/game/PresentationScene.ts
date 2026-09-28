@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 
+import { gameplayConfig } from "../config/gameplayConfig";
 import { PresentationController } from "../presentation/PresentationController";
 import { getRoomIndex, roomRegistry } from "../presentation/roomRegistry";
 import { GAME_HEIGHT, GAME_WIDTH, WORLD_HEIGHT, WORLD_WIDTH } from "./config";
@@ -18,11 +19,12 @@ import {
 } from "./systems/RoomTransition";
 import type { RoomExitDirection } from "./systems/RoomTransition";
 
-const GROUND_HEIGHT = 45;
+const GROUND_HEIGHT = gameplayConfig.room.groundHeight;
+const TRANSITION_DURATION = gameplayConfig.room.transitionDuration;
+
 function getPlayerStartY(): number {
-  return GAME_HEIGHT - GROUND_HEIGHT - 54;
+  return GAME_HEIGHT - GROUND_HEIGHT - gameplayConfig.player.height / 2;
 }
-const TRANSITION_DURATION = 180;
 
 export class PresentationScene extends Phaser.Scene {
   private readonly presentationController = new PresentationController();
