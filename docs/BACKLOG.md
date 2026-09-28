@@ -53,9 +53,9 @@ Legenda:
 
 ## Fase 3 — Interaction Core
 
-- [ ] **P0** HotspotSystem
+- [x] **P0** HotspotSystem
 - [x] **P0** mouse world coordinates
-- [ ] **P0** aim assist
+- [x] **P0** aim assist
 - [ ] **P1** Arrow entity
 - [ ] **P1** shoot animation placeholder
 - [ ] **P1** arrow hit
