@@ -4,6 +4,7 @@ import { gameplayConfig } from "../config/gameplayConfig";
 import { PresentationController } from "../presentation/PresentationController";
 import { getRoomIndex, roomRegistry } from "../presentation/roomRegistry";
 import { GAME_HEIGHT, GAME_WIDTH, WORLD_HEIGHT, WORLD_WIDTH } from "./config";
+import { Arrow } from "./entities/Arrow";
 import { Player } from "./entities/Player";
 import { InputController } from "./systems/InputController";
 import {
@@ -41,6 +42,8 @@ export class PresentationScene extends Phaser.Scene {
   private nextExitText?: Phaser.GameObjects.Text;
   private readonly hotspotVisuals = new Map<string, Phaser.GameObjects.Arc>();
   private readonly hotspotDecorations: Phaser.GameObjects.GameObject[] = [];
+  private readonly activeArrows = new Set<Arrow>();
+  private readonly inFlightRevealIds = new Set<string>();
   private selectedHotspotId?: string;
   private nextKey?: Phaser.Input.Keyboard.Key;
   private previousKey?: Phaser.Input.Keyboard.Key;
@@ -198,7 +201,7 @@ export class PresentationScene extends Phaser.Scene {
     }
 
     if (input.shootRequested) {
-      this.resolveTestHotspot(input.targetWorldX, input.targetWorldY);
+      this.shootAtHotspot(input.targetWorldX, input.targetWorldY);
     }
 
     if (!this.transitionLocked) {
@@ -231,8 +234,10 @@ export class PresentationScene extends Phaser.Scene {
     }
 
     if (this.resetKey && Phaser.Input.Keyboard.JustDown(this.resetKey)) {
+      this.clearProjectiles();
       this.presentationController.resetRoom();
       this.player?.setPosition(ENTRY_OFFSET, getPlayerStartY());
+      this.updateRoomVisuals();
       this.flashAction("ROOM RESET");
     }
   }
@@ -259,6 +264,7 @@ export class PresentationScene extends Phaser.Scene {
 
     this.transitionLocked = true;
     this.blockedExitDirection = null;
+    this.clearProjectiles();
     this.player.stopHorizontal();
     this.cameras.main.fadeOut(TRANSITION_DURATION, 0, 0, 0);
 
@@ -353,7 +359,7 @@ export class PresentationScene extends Phaser.Scene {
     }
   }
 
-  private resolveTestHotspot(pointerX: number, pointerY: number): void {
+  private shootAtHotspot(pointerX: number, pointerY: number): void {
     const room = this.presentationController.getCurrentRoom();
     const target = resolveHotspotTarget(
       room.hotspots,
@@ -374,9 +380,81 @@ export class PresentationScene extends Phaser.Scene {
       .get(target.hotspot.id)
       ?.setStrokeStyle(8, 0x86efac, 1);
 
+    if (!this.player || this.inFlightRevealIds.has(target.hotspot.revealId)) {
+      this.flashAction("TARGET ALREADY IN FLIGHT");
+      return;
+    }
+
+    this.player.faceTarget(target.hotspot.x);
+    this.inFlightRevealIds.add(target.hotspot.revealId);
     this.flashAction(
-      `TARGET: ${target.hotspot.id} · d=${Math.round(target.distance)}`,
+      `SHOOT → ${target.hotspot.id} · d=${Math.round(target.distance)}`,
     );
+
+    let arrow: Arrow;
+    arrow = new Arrow(
+      this,
+      this.player.x,
+      this.player.y - 12,
+      target.hotspot.x,
+      target.hotspot.y,
+      () => {
+        this.activeArrows.delete(arrow);
+        this.inFlightRevealIds.delete(target.hotspot.revealId);
+        this.handleArrowHit(
+          target.hotspot.id,
+          target.hotspot.revealId,
+          target.hotspot.x,
+          target.hotspot.y,
+        );
+      },
+    );
+
+    this.activeArrows.add(arrow);
+  }
+
+  private handleArrowHit(
+    hotspotId: string,
+    revealId: string,
+    x: number,
+    y: number,
+  ): void {
+    const revealed = this.presentationController.reveal(revealId);
+
+    this.createImpact(x, y);
+
+    if (revealed) {
+      this.flashAction(`REVEALED: ${hotspotId}`);
+      this.renderHotspots();
+      return;
+    }
+
+    this.flashAction(`ALREADY REVEALED: ${hotspotId}`);
+  }
+
+  private createImpact(x: number, y: number): void {
+    const impact = this.add
+      .circle(x, y, 16, 0x86efac, 0.9)
+      .setStrokeStyle(4, 0xf7f3e8, 1)
+      .setDepth(5);
+
+    this.tweens.add({
+      targets: impact,
+      scale: 3,
+      alpha: 0,
+      duration: 260,
+      ease: "Quad.Out",
+      onComplete: () => impact.destroy(),
+    });
+  }
+
+  private clearProjectiles(): void {
+    for (const arrow of this.activeArrows) {
+      arrow.destroy();
+    }
+
+    this.activeArrows.clear();
+    this.inFlightRevealIds.clear();
   }
 
   private clearHotspotSelection(): void {
