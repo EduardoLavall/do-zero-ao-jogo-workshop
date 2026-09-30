@@ -65,11 +65,11 @@ Legenda:
 - [x] **P0** HotspotSystem
 - [x] **P0** mouse world coordinates
 - [x] **P0** aim assist
-- [ ] **P1** Arrow entity
-- [ ] **P1** shoot animation placeholder
-- [ ] **P1** arrow hit
-- [ ] **P1** reveal state
-- [ ] **P1** locked/unlocked/revealed
+- [x] **P1** Arrow entity
+- [x] **P1** shoot animation placeholder
+- [x] **P1** arrow hit
+- [x] **P1** reveal state
+- [x] **P1** locked/unlocked/revealed
 
 ## Fase 4 — UI
 
