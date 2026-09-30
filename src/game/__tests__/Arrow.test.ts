@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { getProjectileTravelDurationMs } from "../entities/Arrow";
+import { getProjectileTravelDurationMs } from "../systems/ProjectileMath";
 
-describe("Arrow", () => {
+describe("ProjectileMath", () => {
   it("calculates deterministic travel duration from distance and speed", () => {
     expect(getProjectileTravelDurationMs(0, 0, 900, 0, 900)).toBe(1000);
   });
