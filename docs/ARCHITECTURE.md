@@ -261,6 +261,36 @@ Importante: o mesmo pointer controla o target X do personagem e a mira. Atirar n
 
 ---
 
+# Projectile / Arrow flow
+
+O projectile não conhece regras específicas de room.
+
+Fluxo:
+
+```text
+Left click
+  ↓
+HotspotSystem.resolveHotspotTarget(...)
+  ↓
+Player faces target
+  ↓
+Arrow(start, target, gameplayConfig.projectile.speed)
+  ↓
+hit callback
+  ↓
+PresentationController.reveal(revealId)
+  ↓
+impact visual + refresh de hotspot state
+```
+
+Regras:
+- a velocidade vem de `gameplayConfig.projectile.speed`;
+- a Arrow recebe apenas coordenadas e callback de impacto;
+- a Scene coordena seleção, spawn, hit e reveal;
+- projectiles ativos são destruídos em reset, troca de room e shutdown;
+- o mesmo reveal não recebe dois projectiles simultâneos;
+- reveal já concluído deixa de ser target elegível via `HotspotSystem`.
+
 # Conteúdo e render
 
 Conteúdo longo permanece em DOM.
