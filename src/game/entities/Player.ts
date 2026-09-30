@@ -48,6 +48,14 @@ export class Player {
     this.body.setVelocityX(0);
   }
 
+  public faceTarget(targetX: number): void {
+    if (targetX < this.x) {
+      this.view.setScale(-1, 1);
+    } else if (targetX > this.x) {
+      this.view.setScale(1, 1);
+    }
+  }
+
   public get x(): number {
     return this.view.x;
   }
