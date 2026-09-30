@@ -1,20 +1,10 @@
 import Phaser from "phaser";
 
 import { gameplayConfig } from "../../config/gameplayConfig";
+import { getProjectileTravelDurationMs } from "../systems/ProjectileMath";
 
 const ARROW_LENGTH = 46;
 const ARROW_THICKNESS = 8;
-
-export function getProjectileTravelDurationMs(
-  startX: number,
-  startY: number,
-  targetX: number,
-  targetY: number,
-  speed = gameplayConfig.projectile.speed,
-): number {
-  const distance = Math.hypot(targetX - startX, targetY - startY);
-  return (distance / speed) * 1000;
-}
 
 export class Arrow {
   public readonly view: Phaser.GameObjects.Rectangle;
@@ -42,7 +32,13 @@ export class Arrow {
       targets: this.view,
       x: targetX,
       y: targetY,
-      duration: getProjectileTravelDurationMs(startX, startY, targetX, targetY),
+      duration: getProjectileTravelDurationMs(
+        startX,
+        startY,
+        targetX,
+        targetY,
+        gameplayConfig.projectile.speed,
+      ),
       ease: "Linear",
       onComplete: () => {
         if (this.destroyed) {
