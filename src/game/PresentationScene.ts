@@ -180,6 +180,7 @@ export class PresentationScene extends Phaser.Scene {
     this.updateRoomVisuals();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.clearProjectiles();
       this.inputController?.destroy();
     });
   }
@@ -317,8 +318,18 @@ export class PresentationScene extends Phaser.Scene {
 
     for (const hotspot of room.hotspots) {
       const hotspotState = getHotspotState(hotspot, state);
-      const fillColor = hotspotState === "locked" ? 0x334155 : 0x1e293b;
-      const strokeColor = hotspotState === "locked" ? 0x64748b : 0xfacc15;
+      const fillColor =
+        hotspotState === "locked"
+          ? 0x334155
+          : hotspotState === "revealed"
+            ? 0x14532d
+            : 0x1e293b;
+      const strokeColor =
+        hotspotState === "locked"
+          ? 0x64748b
+          : hotspotState === "revealed"
+            ? 0x86efac
+            : 0xfacc15;
 
       const circle = this.add
         .circle(hotspot.x, hotspot.y, hotspot.radius, fillColor, 0.22)
@@ -337,7 +348,12 @@ export class PresentationScene extends Phaser.Scene {
           {
             fontFamily: "monospace",
             fontSize: "18px",
-            color: hotspotState === "locked" ? "#64748b" : "#facc15",
+            color:
+              hotspotState === "locked"
+                ? "#64748b"
+                : hotspotState === "revealed"
+                  ? "#86efac"
+                  : "#facc15",
             backgroundColor: "#0b1020",
             padding: { x: 8, y: 5 },
           },
@@ -467,7 +483,8 @@ export class PresentationScene extends Phaser.Scene {
 
     if (hotspot) {
       const state = getHotspotState(hotspot, this.presentationController.getState());
-      const strokeColor = state === "locked" ? 0x64748b : 0xfacc15;
+      const strokeColor =
+        state === "locked" ? 0x64748b : state === "revealed" ? 0x86efac : 0xfacc15;
       this.hotspotVisuals.get(hotspot.id)?.setStrokeStyle(4, strokeColor, 0.9);
     }
 
