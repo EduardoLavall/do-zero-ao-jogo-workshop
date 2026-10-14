@@ -176,7 +176,7 @@ export class PresentationUI {
     this.openCopy({
       kicker: "PRESENTER MODE / AJUDA",
       title: "Você controla a apresentação",
-      body: "ENTER começa. N/P mudam de sala, R reinicia, E revela o próximo alvo disponível sem atirar, ESC fecha o painel, F alterna tela cheia e H abre esta ajuda. Mouse: esquerda atira, direita pula, meio alterna o controle.",
+      body: "ENTER começa. N/P mudam de sala, R reinicia, E revela o próximo alvo disponível sem atirar, 6 abre o laboratório de programação, ESC fecha o painel, F alterna tela cheia e H abre esta ajuda. Mouse: esquerda atira, direita pula, meio alterna o controle.",
     });
   }
 
