@@ -133,3 +133,13 @@ Preferir Conventional Commits:
 - não acoplar conteúdo textual à física/renderização;
 - não fazer uma room depender de ordem de cliques sem necessidade;
 - não sacrificar fallback de apresentação em favor de game feel.
+
+## Contrato de conteúdo (issue #27)
+
+- `src/presentation/roomStoryboards.ts` é a fonte tipada das 11 salas; não duplicar copy em `PresentationScene` ou em `PresentationUI`.
+- `docs/STORYBOARDS.md` contém o roteiro humano e `docs/CONTENT-PIPELINE.md` explica o schema.
+- `src/game/systems/RoomWorldRenderer.ts` desenha somente os placeholders derivados do schema, sem `switch(roomId)`.
+- Evoluir a Room 6 em #9 e usar como template para as outras; `productionStatus=\"storyboard\"` não implica sala terminada.
+- Controller guarda reveals/objetivos por sala em memória. R apaga só a atual, N/P preservam; não confundir persistência em navegação com persistência entre recarregamentos.
+- O laboratório técnico `dev-interactions` existe apenas via T; não adicionar aos 11 passos do workshop.
+- Scripts, IDs de assets e sons citados nos dados são planejamento; não carregar URLs externas ou arquivos inexistentes no runtime.
