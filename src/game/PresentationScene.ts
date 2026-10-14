@@ -395,7 +395,7 @@ export class PresentationScene extends Phaser.Scene {
     );
     this.refreshHud();
     this.ui?.openReveal(hotspot.revealId);
-    if (this.presentationController.getCurrentRoom().objectives.every((objective) => this.presentationController.getState().completedObjectives.has(objective.id))) {
+    if (this.presentationController.getState().roomId === "room-06" && this.presentationController.getCurrentRoom().objectives.every((objective) => this.presentationController.getState().completedObjectives.has(objective.id))) {
       this.ui?.showToast("ENGINE ONLINE · ROOM COMPLETE · N PARA AVANÇAR");
     }
   }
