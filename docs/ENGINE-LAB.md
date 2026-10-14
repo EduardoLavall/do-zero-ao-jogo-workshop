@@ -1,5 +1,15 @@
 # Vertical slice — Room 6: Programação e Engine (#9)
 
+## Estado real de prontidão — atualizado 2026-10-14
+
+**Esta vertical slice implementa o roteiro, os terminais, os diagramas e o fluxo básico de reveal, não as demonstrações interativas do workshop.**
+
+- **S1 (conteúdo e interface): entregue** pelo PR #36: seis terminais, painéis, C#, dependências e objetivo.
+- **S2 (simulação executável / *interactive learning*): PENDENTE**, issues [#39](https://github.com/EduardoLavall/do-zero-ao-jogo-workshop/issues/39) e [#40](https://github.com/EduardoLavall/do-zero-ao-jogo-workshop/issues/40).
+- Não basta clicar para abrir texto, nem animar 3 caixas de Input/Update/Render. Será necessário realmente controlar play/pause/step, mudar FPS simulado/fixed timestep, ligar/desligar componentes e comparar resultados de impulso/gravidade.
+- A arquitetura comum de demos pertence à [#38](https://github.com/EduardoLavall/do-zero-ao-jogo-workshop/issues/38). [Plano completo](./INTERACTIVE-LEARNING.md).
+- S3/S4 (juiciness, sprites e som) continuam em #24/#25/#26, depois que S2 estiver comprovado.
+
 ## Escopo entregue
 
 A apresentação continua executada **inteiramente em Phaser 3 + TypeScript**. Unity/C# aparecem **somente nos exemplos didáticos**, não são dependências de execução.
@@ -34,6 +44,17 @@ A apresentação continua executada **inteiramente em Phaser 3 + TypeScript**. U
 - O valor padrão de timestep da física é comumente `0.02 s` (50 Hz), mas é configurável por projeto.
 - O exemplo de `Keyboard.current.spaceKey.wasPressedThisFrame` depende do **pacote Unity Input System**; `Input.GetKeyDown` é da API de entrada legada.
 - `Rigidbody2D` participa da física; `Collider2D` descreve geometria de contato. `ForceMode2D.Impulse` aplica impulso, não define diretamente a posição.
+
+## Novo checklist de aprendizado interativo (ainda NÃO entregue)
+
+- [ ] Controle de Game Loop: executar, pausar, avançar um frame e resetar.
+- [ ] FPS simulado/timestep físico mudam os contadores reais do modelo TS; taxa de atualização do browser **não** é alterada.
+- [ ] Toggles de componentes alteram resultado do objeto (visibilidade, colisão, gravidade).
+- [ ] Input gera evento demonstrável e comportamento diferente ao alternar opções.
+- [ ] Impulso e gravidade modificam altura, posição/velocidade e tempo de retorno.
+- [ ] Pelo menos uma comparação A/B e takeaway por segmento; fallback completo, sem mouse.
+- [ ] Todas as demos são determinísticas, limitadas e canceladas ao navegar ou resetar.
+- [ ] Ensaiar 2:45 no projetor; não obrigar completar minigame para avançar.
 
 ## Checklist de QA manual
 
