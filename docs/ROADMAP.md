@@ -13,9 +13,10 @@
 - [ ] #20 Fase 2: F2/localStorage/reset defaults.
 - [x] #8: UI de apresentação inicial com menu, HUD, painel DOM, atalhos e fallback de reveal (pendente smoke visual em projetor).
 - [ ] #23: validação em projetor real e screenshots das três resoluções; geometria e tipografia inicial implementadas.
-- [ ] #9: primeira room temática de ponta a ponta.
+- [x] #27: 11 storyboards executáveis com metas de tempo, painel, hotspots, props e presenter cue.
+- [ ] #9: Room 6 como vertical slice artística/didática acabada.
 
-**Não confundir infraestrutura implementada com slides concluídos:** registry contém somente Room 01 vazia e Room 02 de teste; as 10 rooms didáticas + Final estão pendentes.
+**Não confundir infraestrutura implementada com slides concluídos:** registry agora contém 11 rooms autoradas como placeholders com painéis, hotspots e falas-guia; arte, efeitos e polimento de conteúdo ainda estão pendentes.
 
 ## Sequência de produção (gates; fases numeradas daqui para frente)
 
@@ -84,8 +85,14 @@ Regra de corte: manter a explicação técnica (Game Loop / pulo) e diminuir his
 
 ## Próxima issue executável
 
-**#23 + #8**: protótipo legível em projetor, menu, HUD/overlays DOM e fallback. Em paralelo, storyboard mínimo da Room 6 no **#27**. Só então #9.
+**#9 — vertical slice da Room 6** (com #23: inspeção de legibilidade em projetor): usar as cenas autoradas da #27 como base, implementar explicações técnicas e diagramas visualmente ricos.
 
 ## Atualização de implementação — #8 / #23 (2026-10-14)
 
 A base UI foi implementada no PR da issue #8: camada DOM proporcional ao canvas, menu, HUD, painéis, teclado e reveal manual; uma sala de teste já atualiza objetivos/progresso. A #23 **não** está pronta: é obrigatório conferir screenshots 1280×720, 1920×1080, 1280×800 e testar a leitura física em projetor. O próximo gate após o smoke test é #27 → #9 (Room 6), não a produção em massa de sprites.
+
+## Atualização de storyboards — #27 (2026-10-14)
+
+Os 11 storyboards estão centralizados em `src/rooms/workshopRooms.ts`, conectados a `roomRegistry`, `PresentationUI` e `RoomRenderer`. Contém roteiro, composições provisórias, narrativa, conteúdo de reveals, assets planejados e objetivos. O `PresentationController` guarda progresso por sala durante a sessão e o reset R atua somente na sala atual. O menu (20s) + salas (790s) = 13:30, com 90s reservados para contingência. Veja [STORYBOARDS.md](./STORYBOARDS.md).
+
+**Gate atual:** validar a versão em browser e trabalhar #9 na Room 6; ainda faltam assets/audio reais, verificação de fontes, revisão didática e ensaio físico.
