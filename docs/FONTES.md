@@ -647,3 +647,20 @@ Sempre que necessário, usar a indicação:
 > **diagrama simplificado**
 
 O objetivo é ensinar o modelo mental correto sem transformar uma introdução de 15 minutos em uma aula de engine internals.
+
+---
+
+# Fontes potenciais para arte e SFX (adicionadas 2026-10-14)
+
+Estas referências são **fontes de obtenção**, não aprovação automática para incorporar qualquer arquivo ao repositório. Verificar licença do **item específico** e manter registro em `docs/ART-AUDIO-PRODUCTION.md`/manifest antes de usar.
+
+- Kenney Pixel Pack — https://kenney.nl/assets/pixel-pack — página informa CC0, conferir licença do download.
+- Kenney Pixel Platformer — https://kenney.nl/assets/pixel-platformer — página informa CC0.
+- Kenney FAQ de licenças — https://kenney.nl/support — asset pages informam CC0, sem atribuição obrigatória.
+- OpenGameArt — https://opengameart.org/ e FAQ https://opengameart.org/node/5571 — licença varia por arquivo; CC BY/SA requerem cautela e créditos.
+- jfxr / Frozen Fractal — https://github.com/ttencate/jfxr — ferramenta de criação de SFX originais, README informa liberdade de uso dos sons criados.
+- jsfxr — https://github.com/chr15m/jsfxr — sintetizador de efeitos e presets, conferir licença do código se embutir biblioteca.
+- Freesound FAQ — https://freesound.org/help/faq/ — filtros CC0/CC BY/CC BY-NC; confirmar termos por gravação.
+- Preferir criação autoral de sprites/sfx, áudio local e música sem letra. Não usar música/sprite/rip de videogame comercial por conveniência.
+
+**Status:** nenhum arquivo de mídia externo foi baixado/adicionado nesta etapa documental. Origem e licenças devem ser auditadas durante issues #25/#26.
