@@ -71,11 +71,13 @@ describe("PresentationController", () => {
   it("resets room-local progress without changing the current room", () => {
     const controller = new PresentationController("room-02");
 
-    controller.reveal("reveal-a");
-    controller.completeObjective("objective-a");
+    const room = controller.getCurrentRoom();
+    for (const hotspot of room.hotspots) {
+      expect(controller.reveal(hotspot.revealId)).toBe(true);
+    }
 
-    expect(controller.getState().revealed.has("reveal-a")).toBe(true);
-    expect(controller.getState().completedObjectives.has("objective-a")).toBe(true);
+    expect(controller.getState().revealed.size).toBe(room.hotspots.length);
+    expect(controller.getState().completedObjectives.has(room.objectives[0]!.id)).toBe(true);
 
     controller.resetRoom();
 
@@ -89,18 +91,20 @@ describe("PresentationController", () => {
     const listener = vi.fn();
     controller.subscribe(listener);
 
-    controller.reveal("reveal-a");
-    controller.completeObjective("objective-a");
+    const room = controller.getCurrentRoom();
+    for (const hotspot of room.hotspots) {
+      controller.reveal(hotspot.revealId);
+    }
     controller.nextRoom();
     controller.resetRoom();
 
     expect(listener).toHaveBeenCalledWith({
       type: "hotspot:revealed",
-      revealId: "reveal-a",
+      revealId: room.hotspots[0]!.revealId,
     });
     expect(listener).toHaveBeenCalledWith({
       type: "objective:completed",
-      objectiveId: "objective-a",
+      objectiveId: room.objectives[0]!.id,
     });
     expect(listener).toHaveBeenCalledWith({
       type: "presentation:next",
@@ -151,6 +155,37 @@ describe("PresentationController", () => {
 
     expect(controller.getState().completedObjectives.has(objective.id)).toBe(true);
     expect(controller.reveal(objective.requiredRevealIds[0]!)).toBe(false);
+  });
+
+  it("rejects unknown, locked and repeated reveals at the presentation core boundary", () => {
+    const controller = new PresentationController("room-06");
+    const room = controller.getCurrentRoom();
+    const locked = room.hotspots.find((hotspot) => (hotspot.requiredRevealIds?.length ?? 0) > 0);
+
+    expect(controller.reveal("not-a-room-reveal")).toBe(false);
+    if (locked) {
+      expect(controller.reveal(locked.revealId)).toBe(false);
+    }
+
+    const first = room.hotspots.find((hotspot) => !hotspot.requiredRevealIds?.length)!;
+    expect(controller.reveal(first.revealId)).toBe(true);
+    expect(controller.reveal(first.revealId)).toBe(false);
+    expect(controller.getState().revealed.size).toBe(1);
+  });
+
+  it("rejects manual completion before the actual room objective requirements", () => {
+    const controller = new PresentationController("room-01");
+    const room = controller.getCurrentRoom();
+    const objective = room.objectives[0]!;
+    expect(controller.completeObjective("not-an-objective")).toBe(false);
+    expect(controller.completeObjective(objective.id)).toBe(false);
+
+    for (const hotspot of room.hotspots) {
+      controller.reveal(hotspot.revealId);
+    }
+
+    expect(controller.getState().completedObjectives.has(objective.id)).toBe(true);
+    expect(controller.completeObjective(objective.id)).toBe(false);
   });
 
   it("supports unsubscribing from events", () => {
