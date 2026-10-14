@@ -87,6 +87,18 @@ Teclado não é a navegação principal do player. Ele existe como fallback de a
 9. arte
 10. áudio/polish
 
+## Qualidade de produção para palco
+
+- Manter 1920×1080 lógico e FIT; validar a leitura também em 1280×720/1280×800 e projetor real.
+- Exit zone e borda decorativa **não** definem safe area de conteúdo; deixar margem de leitura sem criar faixa grossa.
+- Informações essenciais e código devem estar em DOM/CSS com corpo/títulos legíveis à distância; não usar Phaser.Text minúsculo como slide final.
+- Cada room precisa de tese, interação principal, presenter cue, takeaway, tempo e avanço/reveal sem mouse.
+- Juiciness deve comunicar causalidade sem esconder texto: breve antecipação, hit, flash/trail/sparks, SFX curto e reveal.
+- Áudio/música e FX precisam ter mute/reduced-motion; sem internet ou áudio o workshop funciona integralmente.
+- Todo asset externo precisa de fonte, licença/atribuição e cópia local; proibir rip não licenciado.
+- Priorizar Room 6 piloto (#9) antes de produzir as outras 10 cenas.
+- Consultar `docs/AUDITORIA-PRONTIDAO.md`, `docs/PROJECAO-QA.md` e `docs/ART-AUDIO-PRODUCTION.md` nas mudanças de conteúdo/visuais/áudio.
+
 ## Validação obrigatória
 
 Antes de considerar uma tarefa concluída:
