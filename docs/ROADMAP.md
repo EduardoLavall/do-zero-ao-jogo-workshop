@@ -13,9 +13,10 @@
 - [ ] #20 Fase 2: F2/localStorage/reset defaults.
 - [x] #8: UI de apresentação inicial com menu, HUD, painel DOM, atalhos e fallback de reveal (pendente smoke visual em projetor).
 - [ ] #23: validação em projetor real e screenshots das três resoluções; geometria e tipografia inicial implementadas.
-- [ ] #9: primeira room temática de ponta a ponta.
+- [x] #27: 11 storyboards com cues, dados de gameplay, timing, placeholders e progresso por sala.
+- [ ] #9: Room 6 final como vertical slice (ainda não feita).
 
-**Não confundir infraestrutura implementada com slides concluídos:** registry contém somente Room 01 vazia e Room 02 de teste; as 10 rooms didáticas + Final estão pendentes.
+**Não confundir storyboards com slides finalizados:** registry agora contém 11 rooms data-driven navegáveis com conteúdo introdutório e reveals provisórios. Os cenários, efeitos juicy, sprites/SFX e apresentações completas ainda dependem de #9/#24–#26/#28–#30. Laboratório está isolado via T.
 
 ## Sequência de produção (gates; fases numeradas daqui para frente)
 
@@ -84,8 +85,12 @@ Regra de corte: manter a explicação técnica (Game Loop / pulo) e diminuir his
 
 ## Próxima issue executável
 
-**#23 + #8**: protótipo legível em projetor, menu, HUD/overlays DOM e fallback. Em paralelo, storyboard mínimo da Room 6 no **#27**. Só então #9.
+**#9 — vertical slice da Room 6**: expandir cenário, diagramas, interação técnica e layout audiovisual sobre o contrato da #27. A #23 continua aberta para prova em projetor.
 
 ## Atualização de implementação — #8 / #23 (2026-10-14)
 
 A base UI foi implementada no PR da issue #8: camada DOM proporcional ao canvas, menu, HUD, painéis, teclado e reveal manual; uma sala de teste já atualiza objetivos/progresso. A #23 **não** está pronta: é obrigatório conferir screenshots 1280×720, 1920×1080, 1280×800 e testar a leitura física em projetor. O próximo gate após o smoke test é #27 → #9 (Room 6), não a produção em massa de sprites.
+
+## Entrega #27 — Storyboards tipados (2026-10-14)
+
+As 11 etapas estão descritas em `src/presentation/roomStoryboards.ts` e `docs/STORYBOARDS.md`; todos os painéis são alimentados pelos dados, a `PresentationScene` delega os placeholders ao `RoomWorldRenderer`, e os objetivos são derivados do controller. `R` reseta somente sala atual; N/P preservam progresso; `T` alterna laboratório sem afetar o roteiro; `E` abre takeaway depois do último reveal. **Não marcar G2/G3 como atingidos:** faltam conteúdo visual rico, sprites, áudio, ensaio e testes de projetor.
