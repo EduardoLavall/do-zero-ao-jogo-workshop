@@ -1,184 +1,85 @@
-# Roadmap
+# Roadmap de produção — Do Zero ao Jogo
 
-## Estratégia
+> Atualizado após auditoria da `main` em 2026-10-14. **Meta de entrega:** workshop 15 minutos com 13:30 de conteúdo + 1:30 de contingência. **Critério:** apresentações podem ocorrer inteiramente pelo teclado mesmo se gameplay, áudio ou FX falharem.
 
-Construir **de dentro para fora**.
+## Ponto de partida (já existente)
 
-Primeiro garantir que Slide Rooms funciona como sistema de apresentação. Depois adicionar conteúdo e estética.
+- [x] #1–#4: stack, validações, tipos e PresentationController.
+- [x] #5/#17: player mouse-first e rooms fixas 1920×1080 16:9, `Phaser.Scale.FIT`, câmera fixa, navegação lateral.
+- [x] #6: HotspotSystem e aim assist.
+- [x] #7: Arrow placeholder, impacto/reveal básico.
+- [x] #13: GitHub Pages; deploy Vercel utilizado em paralelo.
+- [x] #20 Fase 1: gameplayConfig.ts para game feel.
+- [ ] #20 Fase 2: F2/localStorage/reset defaults.
+- [ ] #8/#9: UI de apresentação e primeira room temática de ponta a ponta.
 
----
+**Não confundir infraestrutura implementada com slides concluídos:** registry contém somente Room 01 vazia e Room 02 de teste; as 10 rooms didáticas + Final estão pendentes.
 
-# Fase 0 — Fundação do repositório
+## Sequência de produção (gates; fases numeradas daqui para frente)
 
-Objetivo: qualquer humano ou IA consegue clonar, rodar, entender e validar.
+| Ordem | Gate | Issue(s) | Saída / definição de pronto | Prioridade |
+|---|---|---|---|---|
+| 1 | **Projeção + UX de apresentação** | #23, #8 | tipografia legível em 720p/1080p, conteúdo DOM, menu Enter, HUD/overlay, fullscreen F, N/P/R, modo sem mouse | P0 |
+| 2 | **Roteiro e estrutura data-driven** | #27 | 11 storyboards, data schema, presenter cues, reveal persistence decidida, orçamento 13:30+1:30 | P0 |
+| 3 | **Vertical slice didática** | #9 | Room 6 com Game Loop, Unity/MonoBehaviour, Rigidbody2D, código+diagrama+efeito; apresentação completa com placeholders | P0 |
+| 4 | **Juicy baseline** | #24 | hover, pose/tiro, trail, hit, particles, reveal, objective complete, transições com reduced-motion | P1 |
+| 5 | **Sprite kit piloto** | #25 | style bible, spritesheet player, props/hotspots/UI e fundo modular da Room 6, assets locais e manifest | P1 |
+| 6 | **SFX e ambiente de palco** | #26 | eventos mapeados a SFX próprios/CC0, audio buses, autoplay unlock, mute, mix sob voz e licença documentada | P1 |
+| 7 | **Produção de conteúdo — onda A** | #28 | Rooms 1–4 (conceito, história, tecnologia, hub) | P1 |
+| 8 | **Produção de conteúdo — onda B** | #29 | Rooms 5, 7, 8 (design, arte, áudio); Room 6 é #9 | P1 |
+| 9 | **Produção de conteúdo — onda C** | #30 | Rooms 9, 10 e Final/Q&A; clímax do pulo demonstrado | P1 |
+| 10 | **Tuning do apresentador + release** | #20 Fase 2, #31 | painel F2, presets, estabilidade, ensaio, offline, backup, performance e QA de projeção | P0 para #31 |
 
-Entregas:
+### Dependências
 
-- Vite + TypeScript + Phaser;
-- lint;
-- format;
-- typecheck;
-- testes;
-- estrutura inicial;
-- README;
-- AGENTS;
-- documentação técnica.
+- Gate 1 + definição inicial do Gate 2 antes de produzir arte final.
+- Gate 3 serve de gold standard. Gates 4/5/6 podem evoluir em paralelo **sobre uma única Room 6**.
+- Gates 7/8/9 iniciam depois da aprovação da vertical slice, style bible e UI.
+- Gate 10 inclui testes contínuos durante toda a produção; não deixar verificação em projetor só para a véspera.
 
-**Definition of Done:** `npm install && npm run dev` abre uma tela mínima Phaser sem erros.
+## Roteiro de 15 minutos
 
----
+| Segmento | Alvo |
+|---|---:|
+| Menu | 0:20 |
+| Room 1 | 0:50 |
+| Room 2 | 1:00 |
+| Room 3 | 0:45 |
+| Room 4 | 0:40 |
+| Room 5 | 1:45 |
+| Room 6 | 2:45 |
+| Room 7 | 0:50 |
+| Room 8 | 0:50 |
+| Room 9 | 2:15 |
+| Room 10 | 1:05 |
+| Final | 0:25 |
+| **Conteúdo** | **13:30** |
+| **Contingência** | **1:30** |
+| **Tempo máximo** | **15:00** |
 
-# Fase 1 — Presentation Core
+Regra de corte: manter a explicação técnica (Game Loop / pulo) e diminuir história/efeitos se o ensaio passar de 15 minutos. Não inserir mini-jogos, física obrigatória, menus complexos ou quizzes que possam travar a fala.
 
-Objetivo: navegar por rooms sem depender do personagem.
+## Quality gates obrigatórios
 
-Entregas:
+**G0 — protótipo técnico** (atingido, com testes manuais limitados): duas salas, player, hotspots, flechas e estado.
 
-- tipos Room/Hotspot/Objective;
-- room registry;
-- PresentationState;
-- PresentationController;
-- next / previous / reset;
-- eventos tipados;
-- debug room switcher.
+**G1 — apresentação funcional**: menu, conteúdos DOM, N/P/R/F/ESC, objetivos, progressão acessível sem controle mouse, 720p/1080p.
 
-**DoD:** duas rooms placeholder navegáveis só por comandos de apresentação.
+**G2 — vertical slice juicy**: uma room completa com sprites, SFX, impacto, reveal, narrativa e opção mute/reduced-motion.
 
----
+**G3 — conteúdo completo**: 11 cenas, cada uma com tese, uma interação central, fallback, speaker cue e tempo cronometrado.
 
-# Fase 2 — Game Shell
+**G4 — release show-ready**: CI + build offline, projector last-row pass, consumo de memória/frames aceitável, stress/perda de foco, backup local e ensaio <=15 min.
 
-Objetivo: transformar a apresentação em Slide Rooms fixas e navegáveis.
+## Notas de arquitetura
 
-Entregas:
+- Phaser para mundo/efeitos; DOM/CSS para texto, código, HUD e overlays. NÃO fixar texto de 14px Phaser como informação essencial.
+- Distinção clara: exit zone invisível de ~22px, margem decorativa de ~29px no placeholder atual e **safe area real de conteúdo ~96px**, a validar. Nenhuma faixa gigante é necessária.
+- Sprite/pixel grid coerente e assets locais; audio opt-in/baixo para não abafar fala.
+- Regras de reveal devem sobreviver ao voltar à room se isso servir à apresentação; reset manual deve permanecer disponível.
+- Não exigir ordem perfeita de cliques nem precisão do ponteiro. Uso ao vivo > fidelidade de gameplay.
+- Documentos detalhados: [Auditoria](./AUDITORIA-PRONTIDAO.md), [Projeção](./PROJECAO-QA.md), [Assets e som](./ART-AUDIO-PRODUCTION.md), [Plano mestre](./PLANO-MESTRE.md), [Backlog](./BACKLOG.md).
 
-- player placeholder;
-- movimento horizontal mouse-first;
-- canvas lógico 1920×1080 em proporção 16:9;
-- scaling responsivo com `Phaser.Scale.FIT`;
-- câmera fixa;
-- limites de room;
-- exit zones esquerda/direita;
-- transição entre rooms;
-- reposicionamento do player na borda oposta.
+## Próxima issue executável
 
-**DoD:** player atravessa lateralmente entre duas rooms fixas sem arte final.
-
----
-
-# Fase 3 — Interaction Core
-
-Objetivo: flecha revela conteúdos.
-
-Entregas:
-
-- mouse aim;
-- arrow;
-- hotspot registry;
-- aim assist;
-- hit detection;
-- reveal event;
-- locked/revealed state.
-
-**DoD:** clicar num hotspot faz a flecha acertá-lo e revelar conteúdo de forma determinística.
-
----
-
-# Fase 4 — UI de apresentação
-
-Objetivo: apresentação utilizável mesmo antes do polish.
-
-Entregas:
-
-- HUD;
-- objetivos;
-- room title;
-- painéis DOM;
-- menu inicial;
-- fullscreen;
-- fallback keyboard;
-- progress indicator.
-
-**DoD:** fluxo completo pode ser apresentado com placeholders.
-
----
-
-# Fase 5 — Vertical Slice
-
-Objetivo: uma Slide Room completa prova a linguagem final.
-
-Escolha inicial: **Room 6 — Programação/Engine**.
-
-Entregas:
-
-- cenário provisório;
-- skill/reveal chain;
-- painel de código;
-- Rigidbody2D;
-- game loop;
-- player loop;
-- efeitos básicos;
-- transição de saída.
-
-**DoD:** uma room parece uma versão reduzida do workshop final.
-
----
-
-# Fase 6 — Conteúdo das rooms
-
-Implementar:
-
-1. Room 1 — O que é um jogo?
-2. Room 2 — História condensada
-3. Room 3 — Evolução tecnológica
-4. Room 4 — Hub
-5. Room 5 — Game Design
-6. Room 6 — Programação/Engine
-7. Room 7 — Arte
-8. Room 8 — Áudio
-9. Room 9 — Pulo
-10. Room 10 — Protótipo ao jogo
-11. Final / créditos
-
-Cada room precisa funcionar primeiro com assets provisórios.
-
----
-
-# Fase 7 — Arte e áudio
-
-- personagem final;
-- animações;
-- tiles/backgrounds;
-- icons;
-- SFX;
-- música leve;
-- particles;
-- room-specific visual language.
-
----
-
-# Fase 8 — Polish de apresentação
-
-- transições;
-- timing;
-- preload;
-- accessibility;
-- projector safe area;
-- performance;
-- keyboard cheat sheet;
-- presenter mode/debug;
-- graceful fallback.
-
----
-
-# Fase 9 — Ensaio e hardening
-
-- ensaio cronometrado;
-- testar offline;
-- testar 1920×1080;
-- testar notebook/projetor;
-- testar perda de foco;
-- testar spam de input;
-- garantir reset;
-- build final;
-- backup local.
+**#23 + #8**: protótipo legível em projetor, menu, HUD/overlays DOM e fallback. Em paralelo, storyboard mínimo da Room 6 no **#27**. Só então #9.
