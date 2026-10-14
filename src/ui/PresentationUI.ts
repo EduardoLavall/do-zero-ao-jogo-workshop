@@ -41,11 +41,24 @@ export class PresentationUI {
   private readonly toast: HTMLElement;
   private readonly startButton: HTMLButtonElement;
   private readonly startHandler: () => void;
+  private readonly demoOpenHandler: () => void;
+  private readonly demoCloseHandler: () => void;
+  private readonly demoLaunch: HTMLButtonElement;
+  private readonly demoClose: HTMLButtonElement;
+  private readonly demoPanel: HTMLElement;
+  private readonly demoHost: HTMLElement;
   private toastTimeout?: ReturnType<typeof setTimeout>;
 
-  public constructor(root: HTMLElement, onStart: () => void) {
+  public constructor(
+    root: HTMLElement,
+    onStart: () => void,
+    onDemoOpen: () => void,
+    onDemoClose: () => void,
+  ) {
     this.root = root;
     this.startHandler = onStart;
+    this.demoOpenHandler = onDemoOpen;
+    this.demoCloseHandler = onDemoClose;
     this.layer = document.createElement("div");
     this.layer.className = "presentation-layer";
     this.layer.innerHTML = `
@@ -82,6 +95,14 @@ export class PresentationUI {
         <div class="panel-engine-diagram" aria-label="Diagrama da engine" hidden></div>
         <div class="panel-footer">ESC FECHAR <span aria-hidden="true">·</span> N PRÓXIMA SALA <span aria-hidden="true">·</span> E REVELAR</div>
       </section>
+      <button class="presentation-demo-launch" type="button" hidden>▶ EXPERIMENTAR DEMO <span aria-hidden="true">[D]</span></button>
+      <section class="presentation-demo-panel" role="dialog" aria-label="Experimento interativo" aria-modal="true" hidden>
+        <div class="presentation-demo-heading">
+          <span class="ui-kicker">LABORATÓRIO · INTERACTIVE LEARNING</span>
+          <button type="button" class="presentation-demo-close" aria-label="Fechar experimento">FECHAR ✕</button>
+        </div>
+        <div class="presentation-demo-host"></div>
+      </section>
       <aside class="presentation-toast" role="status" aria-live="polite" hidden></aside>
       <footer class="presentation-keys" hidden>H AJUDA <span>·</span> E REVELAR <span>·</span> N / P SALAS <span>·</span> F TELA CHEIA</footer>
     `;
@@ -101,6 +122,12 @@ export class PresentationUI {
     this.panelBody = requiredElement(this.layer, ".panel-body");
     this.panelCode = requiredElement(this.layer, ".panel-code");
     this.engineDiagram = requiredElement(this.layer, ".panel-engine-diagram");
+    this.demoLaunch = requiredElement(this.layer, ".presentation-demo-launch");
+    this.demoClose = requiredElement(this.layer, ".presentation-demo-close");
+    this.demoPanel = requiredElement(this.layer, ".presentation-demo-panel");
+    this.demoHost = requiredElement(this.layer, ".presentation-demo-host");
+    this.demoLaunch.addEventListener("click", this.demoOpenHandler);
+    this.demoClose.addEventListener("click", this.demoCloseHandler);
     this.toast = requiredElement(this.layer, ".presentation-toast");
     this.startButton = requiredElement(this.layer, ".start-button");
     this.startButton.addEventListener("click", this.startHandler);
@@ -124,6 +151,7 @@ export class PresentationUI {
 
     if (!started) {
       this.closePanel();
+      this.hideDemo();
     }
   }
 
@@ -160,6 +188,30 @@ export class PresentationUI {
     this.controlText.classList.toggle("is-off", !controlEnabled);
   }
 
+  public setDemoAvailable(available: boolean): void {
+    this.demoLaunch.dataset.available = String(available);
+    if (!this.isDemoOpen) {
+      this.demoLaunch.hidden = !available;
+    }
+  }
+
+  public showDemo(): HTMLElement {
+    this.closePanel();
+    this.demoPanel.hidden = false;
+    this.demoLaunch.hidden = true;
+    return this.demoHost;
+  }
+
+  public hideDemo(): void {
+    this.demoPanel.hidden = true;
+    this.demoHost.replaceChildren();
+    this.demoLaunch.hidden = this.demoLaunch.dataset.available !== "true";
+  }
+
+  public get isDemoOpen(): boolean {
+    return !this.demoPanel.hidden;
+  }
+
   public openReveal(revealId: string): void {
     this.openCopy(getRevealCopy(revealId), revealId);
   }
@@ -176,7 +228,7 @@ export class PresentationUI {
     this.openCopy({
       kicker: "PRESENTER MODE / AJUDA",
       title: "Você controla a apresentação",
-      body: "ENTER começa. N/P mudam de sala, R reinicia, E revela o próximo alvo disponível sem atirar, 6 abre o laboratório de programação, ESC fecha o painel, F alterna tela cheia e H abre esta ajuda. Mouse: esquerda atira, direita pula, meio alterna o controle.",
+      body: "ENTER começa. N/P mudam de sala, R reinicia, E revela o próximo alvo disponível sem atirar, D abre/fecha a demo interativa, 6 abre o laboratório de programação, ESC fecha o painel, F alterna tela cheia e H abre esta ajuda. Mouse: esquerda atira, direita pula, meio alterna o controle.",
     });
   }
 
@@ -204,6 +256,8 @@ export class PresentationUI {
       clearTimeout(this.toastTimeout);
     }
     this.startButton.removeEventListener("click", this.startHandler);
+    this.demoLaunch.removeEventListener("click", this.demoOpenHandler);
+    this.demoClose.removeEventListener("click", this.demoCloseHandler);
     this.layer.remove();
   }
 
