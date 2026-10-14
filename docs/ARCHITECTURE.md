@@ -362,3 +362,18 @@ O primeiro marco precisa funcionar apenas com retângulos:
 - reset.
 
 Nenhuma arte final é necessária para validar a arquitetura.
+
+---
+
+# Plano de evolução para apresentação completa (2026-10-14)
+
+- **Game World (Phaser)**: mantém física, animação, sprite, flecha, hotspots e FX. Extrair componentes de `PresentationScene` quando novos painéis/rooms exigirem mais lógica.
+- **Presentation Core (TS puro)**: resolver persistência de state por room (visitar e voltar não apaga reveal por acidente), objetivos, cue do apresentador e skip determinístico.
+- **Presentation UI (DOM/CSS)**: menu, títulos, conteúdo técnico, código C#, diagramas, objetivos, progresso, overlays, créditos. Overlay deve acompanhar o canvas escalado em FIT/letterbox.
+- **Input**: mouse-first mantido, mas não deve mover jogador sem controle sobre aiming/painéis; fallback N/P/R/F/ESC e avançar reveal sem gameplay é obrigatório.
+- **Juice**: FeedbackSystem orientado a eventos (`shoot`, `hit`, `reveal`, `objective:completed`, `room:entered`) coordena animações/SFX/partículas; cooldown/budget/reduced motion; sem side effect no PresentationState.
+- **Audio**: AudioManager com master/music/sfx/ambient, mute, autoplay unlock e fallback silencioso.
+- **Assets**: carregados localmente com manifest de autoria/licença; 1 pack piloto aprovado na Room 6 antes de replicar outras salas.
+- **Projeção**: manter 1920×1080/FIT; não confundir SAFE_AREA_MARGIN visual atual (29px) com área segura de conteúdo (alvo ~96px). Saída 720p exige corpo maior do que os 14–20px lógicos atuais.
+
+Referências: [Auditoria](./AUDITORIA-PRONTIDAO.md) · [Projeção](./PROJECAO-QA.md) · [Arte e áudio](./ART-AUDIO-PRODUCTION.md) · [Roadmap](./ROADMAP.md).
