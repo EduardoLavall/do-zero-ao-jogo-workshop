@@ -1,7 +1,8 @@
 import type { PresentationState, RoomDefinition } from "../presentation/types";
 import { getOverlayPlacement } from "./projection";
-import { getRevealCopy, getRoomIntroduction } from "./presentationCopy";
+import { getRevealCopy, getRoomIntroduction, getRoomTakeaway } from "./presentationCopy";
 import type { PresentationCopy } from "./presentationCopy";
+import { fillEngineLessonDiagram } from "./EngineLessonDiagram";
 
 const LOGICAL_WIDTH = 1920;
 const LOGICAL_HEIGHT = 1080;
@@ -36,6 +37,7 @@ export class PresentationUI {
   private readonly panelTitle: HTMLElement;
   private readonly panelBody: HTMLElement;
   private readonly panelCode: HTMLElement;
+  private readonly engineDiagram: HTMLElement;
   private readonly toast: HTMLElement;
   private readonly startButton: HTMLButtonElement;
   private readonly startHandler: () => void;
@@ -77,6 +79,7 @@ export class PresentationUI {
         <h3 class="panel-title"></h3>
         <p class="panel-body"></p>
         <pre class="panel-code" hidden><code></code></pre>
+        <div class="panel-engine-diagram" aria-label="Diagrama da engine" hidden></div>
         <div class="panel-footer">ESC FECHAR <span aria-hidden="true">·</span> N PRÓXIMA SALA <span aria-hidden="true">·</span> E REVELAR</div>
       </section>
       <aside class="presentation-toast" role="status" aria-live="polite" hidden></aside>
@@ -97,6 +100,7 @@ export class PresentationUI {
     this.panelTitle = requiredElement(this.layer, ".panel-title");
     this.panelBody = requiredElement(this.layer, ".panel-body");
     this.panelCode = requiredElement(this.layer, ".panel-code");
+    this.engineDiagram = requiredElement(this.layer, ".panel-engine-diagram");
     this.toast = requiredElement(this.layer, ".presentation-toast");
     this.startButton = requiredElement(this.layer, ".start-button");
     this.startButton.addEventListener("click", this.startHandler);
@@ -157,11 +161,15 @@ export class PresentationUI {
   }
 
   public openReveal(revealId: string): void {
-    this.openCopy(getRevealCopy(revealId));
+    this.openCopy(getRevealCopy(revealId), revealId);
   }
 
   public openIntroduction(roomId: string): void {
     this.openCopy(getRoomIntroduction(roomId));
+  }
+
+  public openTakeaway(roomId: string): void {
+    this.openCopy(getRoomTakeaway(roomId));
   }
 
   public openHelp(): void {
@@ -199,10 +207,13 @@ export class PresentationUI {
     this.layer.remove();
   }
 
-  private openCopy(copy: PresentationCopy): void {
+  private openCopy(copy: PresentationCopy, revealId?: string): void {
     this.panelKicker.textContent = copy.kicker;
     this.panelTitle.textContent = copy.title;
     this.panelBody.textContent = copy.body;
+    const hasDiagram = revealId ? fillEngineLessonDiagram(this.engineDiagram, revealId) : false;
+    this.engineDiagram.hidden = !hasDiagram;
+    this.panel.classList.toggle("is-engine-panel", hasDiagram);
     this.panelCode.hidden = !copy.code;
     requiredElement(this.panelCode, "code").textContent = copy.code ?? "";
     this.panel.hidden = false;
