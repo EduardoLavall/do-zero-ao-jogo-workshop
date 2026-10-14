@@ -8,7 +8,7 @@
 |---|---:|---|
 | 1920×1080 (16:9) | 1 | usa a tela toda |
 | 1280×720 (16:9) | 0,667 | usa a tela toda |
-| 1280×800 (16:10) | 0,667 | conteúdo 1280×720, barras verticais? **Não**: 40px de letterbox acima e abaixo |
+| 1280×800 (16:10) | 0,667 | conteúdo 1280×720, com 40px de letterbox acima e abaixo |
 | 1440×900 (16:10) | 0,75 | 1440×810, ~45px acima e abaixo |
 
 ## Tamanhos de referência para 720p
