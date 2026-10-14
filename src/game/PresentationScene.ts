@@ -6,6 +6,8 @@ import { getRoomIndex, roomRegistry } from "../presentation/roomRegistry";
 import type { HotspotDefinition } from "../presentation/types";
 import { PresentationUI } from "../ui/PresentationUI";
 import { GAME_HEIGHT, GAME_WIDTH, WORLD_HEIGHT, WORLD_WIDTH } from "./config";
+import { demoRegistry } from "./demos/demoRegistry";
+import { RoomDemoController } from "./demos/RoomDemoController";
 import { Arrow } from "./entities/Arrow";
 import { Player } from "./entities/Player";
 import { getHotspotState, resolveHotspotTarget } from "./systems/HotspotSystem";
@@ -29,6 +31,7 @@ function getPlayerStartY(): number {
 
 export class PresentationScene extends Phaser.Scene {
   private readonly presentationController = new PresentationController();
+  private readonly demoController = new RoomDemoController(demoRegistry);
 
   private inputController?: InputController;
   private ui?: PresentationUI;
@@ -47,6 +50,7 @@ export class PresentationScene extends Phaser.Scene {
   private revealKey?: Phaser.Input.Keyboard.Key;
   private helpKey?: Phaser.Input.Keyboard.Key;
   private roomSixKey?: Phaser.Input.Keyboard.Key;
+  private demoKey?: Phaser.Input.Keyboard.Key;
   private transitionLocked = false;
   private blockedExitDirection: Exclude<RoomExitDirection, null> | null = null;
   private lastControlEnabled = true;
@@ -112,6 +116,7 @@ export class PresentationScene extends Phaser.Scene {
       this.revealKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
       this.helpKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
       this.roomSixKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX);
+      this.demoKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     }
 
     const root = document.getElementById("game-root");
@@ -119,7 +124,12 @@ export class PresentationScene extends Phaser.Scene {
       throw new Error("Missing #game-root for PresentationUI");
     }
 
-    this.ui = new PresentationUI(root, () => this.startPresentation());
+    this.ui = new PresentationUI(
+      root,
+      () => this.startPresentation(),
+      () => this.openDemo(),
+      () => this.closeDemo(),
+    );
     this.ui.setStarted(this.presentationController.getState().started);
     this.ui.syncLayout(this.game.canvas);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.syncUiLayout);
@@ -129,6 +139,7 @@ export class PresentationScene extends Phaser.Scene {
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.clearProjectiles();
+      this.demoController.close();
       this.inputController?.destroy();
       this.scale.off(Phaser.Scale.Events.RESIZE, this.syncUiLayout);
       window.removeEventListener("resize", this.syncUiLayout);
@@ -139,12 +150,13 @@ export class PresentationScene extends Phaser.Scene {
     });
   }
 
-  public update(): void {
+  public update(_time: number, deltaMs: number): void {
     if (!this.player || !this.inputController) {
       return;
     }
 
     this.handlePresentationKeys();
+    this.demoController.update(deltaMs);
 
     const input = this.inputController.getState(this.player.x);
     if (input.controlEnabled !== this.lastControlEnabled) {
@@ -155,7 +167,8 @@ export class PresentationScene extends Phaser.Scene {
     const blocked =
       !this.presentationController.getState().started ||
       this.transitionLocked ||
-      (this.ui?.isPanelOpen ?? false);
+      (this.ui?.isPanelOpen ?? false) ||
+      this.demoController.isActive;
 
     this.player.update(
       blocked
@@ -211,16 +224,31 @@ export class PresentationScene extends Phaser.Scene {
     }
 
     if (this.escapeKey && Phaser.Input.Keyboard.JustDown(this.escapeKey)) {
-      this.ui?.closePanel();
+      if (this.demoController.isActive) {
+        this.closeDemo();
+      } else {
+        this.ui?.closePanel();
+      }
+      return;
     }
 
     if (!this.presentationController.getState().started || this.transitionLocked) {
       return;
     }
 
+    if (this.demoKey && Phaser.Input.Keyboard.JustDown(this.demoKey)) {
+      if (this.demoController.isActive) {
+        this.closeDemo();
+      } else {
+        this.openDemo();
+      }
+      return;
+    }
+
     if (this.roomSixKey && Phaser.Input.Keyboard.JustDown(this.roomSixKey)) {
       if (this.presentationController.getState().roomId !== "room-06") {
         this.clearProjectiles();
+        this.closeDemo();
         this.ui?.closePanel();
         this.presentationController.enterRoom("room-06");
         this.player?.setPosition(ENTRY_OFFSET, getPlayerStartY());
@@ -243,6 +271,7 @@ export class PresentationScene extends Phaser.Scene {
 
     if (this.resetKey && Phaser.Input.Keyboard.JustDown(this.resetKey)) {
       this.clearProjectiles();
+      this.closeDemo();
       this.presentationController.resetRoom();
       this.player?.setPosition(ENTRY_OFFSET, getPlayerStartY());
       this.blockedExitDirection = null;
@@ -262,6 +291,29 @@ export class PresentationScene extends Phaser.Scene {
     }
   }
 
+  private openDemo(): void {
+    const roomId = this.presentationController.getState().roomId;
+    if (
+      !this.presentationController.getState().started ||
+      this.transitionLocked ||
+      !this.ui ||
+      !this.demoController.canOpen(roomId)
+    ) {
+      return;
+    }
+
+    this.clearProjectiles();
+    const host = this.ui.showDemo();
+    if (!this.demoController.open(roomId, host)) {
+      this.ui.hideDemo();
+    }
+  }
+
+  private closeDemo(): void {
+    this.demoController.close();
+    this.ui?.hideDemo();
+  }
+
   private revealWithKeyboard(): void {
     const room = this.presentationController.getCurrentRoom();
     const hotspot = room.hotspots.find(
@@ -270,6 +322,7 @@ export class PresentationScene extends Phaser.Scene {
     );
 
     this.clearProjectiles();
+    this.closeDemo();
 
     if (hotspot) {
       this.createImpact(hotspot.x, hotspot.y);
@@ -302,6 +355,7 @@ export class PresentationScene extends Phaser.Scene {
     this.transitionLocked = true;
     this.blockedExitDirection = null;
     this.clearProjectiles();
+    this.closeDemo();
     this.ui?.closePanel();
     this.player.stopHorizontal();
     this.cameras.main.fadeOut(TRANSITION_DURATION, 0, 0, 0);
@@ -326,6 +380,7 @@ export class PresentationScene extends Phaser.Scene {
   private updateRoomVisuals(): void {
     const room = this.presentationController.getCurrentRoom();
     this.roomRenderer?.render(room, this.presentationController.getState());
+    this.ui?.setDemoAvailable(this.demoController.canOpen(room.id));
     this.refreshHud();
   }
 

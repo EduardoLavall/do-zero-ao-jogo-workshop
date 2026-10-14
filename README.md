@@ -154,3 +154,9 @@ Arte final, SFX e teste físico de projetor ainda dependem de #24/#25/#26/#23.
 Uma sala só é "jogável" se **uma escolha ou variável alterar o estado simulado e provocar resultado diferente**. As 11 mecânicas previstas e as regras de fallback estão em [INTERACTIVE-LEARNING.md](./docs/INTERACTIVE-LEARNING.md).
 
 Ordem: **#38 (infra de demos)** → **#39/#40 (Room 6 com Game Loop + física manipuláveis)** → **#28/#29/#30 (mecânicas de todas as salas)** → **#24/#25/#26 (juice, sprites e SFX)** → **#41/#23/#31 (QA e palco)**. Nesta etapa estamos atualizando planejamento e issues; **não implementando simulações ainda**.
+
+## Interatividade de salas — primeiro piloto (#38)
+
+Pressione **6** para Room 6 e feche o conteúdo com ESC, depois use **D** ou **EXPERIMENTAR DEMO** para abrir o primeiro laboratório. Os botões MOVER/PULAR/EXECUTAR EXEMPLO mudam um modelo de estado em TypeScript, visualizável no painel; reset e fechamento descartam estado corretamente. **D** fecha/abre, **ESC** fecha, **E** pula para reveal, **N/P** navegam e **R** reseta. Este é o contrato técnico para as próximas demonstrações, não o simulador completo de Game Loop/física.
+
+Leia [INTERACTIVE-CORE.md](./docs/INTERACTIVE-CORE.md). Próximas issues #39 e #40, depois produção das outras salas (#28/#29/#30).
