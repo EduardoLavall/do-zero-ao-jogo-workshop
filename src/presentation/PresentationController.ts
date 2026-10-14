@@ -9,6 +9,7 @@ import type {
 } from "./types";
 
 export type PresentationEvent =
+  | { type: "presentation:started"; roomId: RoomId }
   | { type: "room:entered"; roomId: RoomId }
   | { type: "presentation:next"; roomId: RoomId }
   | { type: "presentation:previous"; roomId: RoomId }
@@ -44,6 +45,16 @@ export class PresentationController {
     return room;
   }
 
+  public start(): boolean {
+    if (this.state.started) {
+      return false;
+    }
+
+    this.state = { ...this.state, started: true };
+    this.emit({ type: "presentation:started", roomId: this.state.roomId });
+    return true;
+  }
+
   public subscribe(listener: PresentationEventListener): () => void {
     this.listeners.add(listener);
 
@@ -57,7 +68,7 @@ export class PresentationController {
       return false;
     }
 
-    this.state = createInitialPresentationState(roomId);
+    this.state = { ...createInitialPresentationState(roomId), started: this.state.started };
     this.emit({ type: "room:entered", roomId });
     return true;
   }
@@ -70,7 +81,7 @@ export class PresentationController {
       return false;
     }
 
-    this.state = createInitialPresentationState(nextRoom.id);
+    this.state = { ...createInitialPresentationState(nextRoom.id), started: this.state.started };
     this.emit({ type: "presentation:next", roomId: nextRoom.id });
     this.emit({ type: "room:entered", roomId: nextRoom.id });
     return true;
@@ -84,7 +95,7 @@ export class PresentationController {
       return false;
     }
 
-    this.state = createInitialPresentationState(previousRoom.id);
+    this.state = { ...createInitialPresentationState(previousRoom.id), started: this.state.started };
     this.emit({ type: "presentation:previous", roomId: previousRoom.id });
     this.emit({ type: "room:entered", roomId: previousRoom.id });
     return true;
@@ -92,7 +103,7 @@ export class PresentationController {
 
   public resetRoom(): void {
     const roomId = this.state.roomId;
-    this.state = createInitialPresentationState(roomId);
+    this.state = { ...createInitialPresentationState(roomId), started: this.state.started };
     this.emit({ type: "presentation:reset", roomId });
   }
 
