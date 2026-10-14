@@ -1456,7 +1456,7 @@ function createRoom(blueprint: RoomBlueprint): RoomDefinition {
     storyboard: blueprint.storyboard,
     objectives: [{
       id: `${blueprint.id}-objective`,
-      label: blueprint.storyboard.takeaway,
+      label: "Revelar os conceitos da sala",
       requiredRevealIds: reveals.map((reveal) => reveal.id),
     }],
     hotspots: reveals.map((reveal) => ({
