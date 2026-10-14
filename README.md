@@ -2,7 +2,7 @@
 
 Apresentação interativa sobre desenvolvimento de jogos.
 
-Em vez de slides tradicionais, o workshop usa **Slide Rooms**: uma experiência 2D sidescroller em HTML na qual o apresentador controla um personagem, percorre salas temáticas e atira flechas em hotspots para revelar conteúdo.
+Em vez de slides tradicionais, o workshop usa **Slide Rooms**: uma experiência 2D de salas fixas 16:9 em HTML na qual o apresentador controla um personagem, percorre salas temáticas e atira flechas em hotspots para revelar conteúdo.
 
 ## Objetivo
 
@@ -35,6 +35,9 @@ Leia antes de implementar:
 5. [docs/BACKLOG.md](./docs/BACKLOG.md)
 6. [docs/PLANO-MESTRE.md](./docs/PLANO-MESTRE.md)
 7. [docs/FONTES.md](./docs/FONTES.md)
+8. [docs/AUDITORIA-PRONTIDAO.md](./docs/AUDITORIA-PRONTIDAO.md)
+9. [docs/PROJECAO-QA.md](./docs/PROJECAO-QA.md)
+10. [docs/ART-AUDIO-PRODUCTION.md](./docs/ART-AUDIO-PRODUCTION.md)
 
 ## Princípio do projeto
 
@@ -78,7 +81,11 @@ npm run test:watch
 
 ## Estado atual
 
-Fundação Vite + TypeScript + Phaser criada. O projeto está preparando o núcleo de apresentação antes das Slide Rooms finais.
+**Estado de protótipo técnico (2026-10-14)**: shell Phaser/Vite, player mouse-first, 2 rooms placeholder (01 vazia + 02 de testes), HotspotSystem e Arrow→reveal. **As 10 salas de conteúdo e o encerramento ainda não estão implementados**. UI DOM, sprites, áudio, assets e teste em projetor ainda faltam.
+
+**Próxima prioridade:** #23 + #8 (projeção/UI apresentável), #27 (storyboards), #9 (Room 6 vertical slice), então #24/#25/#26 (juice/arte/SFX) e #28/#29/#30 (conteúdo). #20 Fase 2 é painel F2. #31 é hardening final.
+
+Produção e critérios: [Auditoria de prontidão](./docs/AUDITORIA-PRONTIDAO.md), [Guia de projeção](./docs/PROJECAO-QA.md) e [Plano de arte/áudio](./docs/ART-AUDIO-PRODUCTION.md).
 
 
 ## GitHub Pages
