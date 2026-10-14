@@ -12,7 +12,13 @@ export const roomRegistry: readonly RoomDefinition[] = [
     id: "room-02",
     title: "Interaction Test Room",
     width: 1920,
-    objectives: [],
+    objectives: [
+      {
+        id: "test-complete",
+        label: "Revelar os 4 alvos de teste",
+        requiredRevealIds: ["test-alpha", "test-beta", "test-gamma", "test-locked"],
+      },
+    ],
     hotspots: [
       {
         id: "hotspot-alpha",
@@ -38,7 +44,7 @@ export const roomRegistry: readonly RoomDefinition[] = [
       {
         id: "hotspot-locked",
         x: 1580,
-        y: 390,
+        y: 570,
         radius: 130,
         revealId: "test-locked",
         requiredRevealIds: ["test-alpha"],

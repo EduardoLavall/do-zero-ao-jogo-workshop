@@ -83,7 +83,24 @@ npm run test:watch
 
 **Estado de protótipo técnico (2026-10-14)**: shell Phaser/Vite, player mouse-first, 2 rooms placeholder (01 vazia + 02 de testes), HotspotSystem e Arrow→reveal. **As 10 salas de conteúdo e o encerramento ainda não estão implementados**. UI DOM, sprites, áudio, assets e teste em projetor ainda faltam.
 
-**Próxima prioridade:** #23 + #8 (projeção/UI apresentável), #27 (storyboards), #9 (Room 6 vertical slice), então #24/#25/#26 (juice/arte/SFX) e #28/#29/#30 (conteúdo). #20 Fase 2 é painel F2. #31 é hardening final.
+**UI inicial (#8):** menu Enter, HUD, objetivo/progresso, overlay HTML/CSS alinhado ao canvas e fallback E. **Ainda falta validar #23** em projetor real e produzir as salas finais. Próximo: #27 (storyboards) e #9 (Room 6 vertical slice); depois #24/#25/#26 (juice/arte/SFX) e #28/#29/#30 (conteúdo). #20 Fase 2 é painel F2. #31 é hardening final.
+
+### Controles na apresentação
+
+| Tecla / mouse | Ação |
+|---|---|
+| Enter | Começar / fechar painel |
+| N / P | Próxima / sala anterior |
+| R | Resetar sala e conteúdo |
+| E | Revelar o próximo hotspot disponível sem atirar |
+| H | Ajuda |
+| ESC | Fechar painel |
+| F | Tela cheia |
+| Botão esquerdo | Atirar (se gameplay não estiver pausado) |
+| Botão direito | Pular |
+| Botão do meio | Ativar/desativar controle do personagem |
+
+A Room 02 continua sendo um **laboratório de testes**, não a Room 2 definitiva do workshop. Painéis congelam o movimento do personagem enquanto abertos. A interface usa uma camada 1920×1080 que segue os bounds do canvas Phaser (FIT/letterbox).
 
 Produção e critérios: [Auditoria de prontidão](./docs/AUDITORIA-PRONTIDAO.md), [Guia de projeção](./docs/PROJECAO-QA.md) e [Plano de arte/áudio](./docs/ART-AUDIO-PRODUCTION.md).
 

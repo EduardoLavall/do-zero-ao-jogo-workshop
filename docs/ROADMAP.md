@@ -11,7 +11,9 @@
 - [x] #13: GitHub Pages; deploy Vercel utilizado em paralelo.
 - [x] #20 Fase 1: gameplayConfig.ts para game feel.
 - [ ] #20 Fase 2: F2/localStorage/reset defaults.
-- [ ] #8/#9: UI de apresentação e primeira room temática de ponta a ponta.
+- [x] #8: UI de apresentação inicial com menu, HUD, painel DOM, atalhos e fallback de reveal (pendente smoke visual em projetor).
+- [ ] #23: validação em projetor real e screenshots das três resoluções; geometria e tipografia inicial implementadas.
+- [ ] #9: primeira room temática de ponta a ponta.
 
 **Não confundir infraestrutura implementada com slides concluídos:** registry contém somente Room 01 vazia e Room 02 de teste; as 10 rooms didáticas + Final estão pendentes.
 
@@ -83,3 +85,7 @@ Regra de corte: manter a explicação técnica (Game Loop / pulo) e diminuir his
 ## Próxima issue executável
 
 **#23 + #8**: protótipo legível em projetor, menu, HUD/overlays DOM e fallback. Em paralelo, storyboard mínimo da Room 6 no **#27**. Só então #9.
+
+## Atualização de implementação — #8 / #23 (2026-10-14)
+
+A base UI foi implementada no PR da issue #8: camada DOM proporcional ao canvas, menu, HUD, painéis, teclado e reveal manual; uma sala de teste já atualiza objetivos/progresso. A #23 **não** está pronta: é obrigatório conferir screenshots 1280×720, 1920×1080, 1280×800 e testar a leitura física em projetor. O próximo gate após o smoke test é #27 → #9 (Room 6), não a produção em massa de sprites.
