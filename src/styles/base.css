@@ -40,6 +40,10 @@ body {
   overflow: hidden;
 }
 
+#game-root:fullscreen {
+  background: #050816;
+}
+
 canvas {
   display: block;
   image-rendering: pixelated;
