@@ -127,7 +127,12 @@ export class PresentationController {
   }
 
   public reveal(revealId: RevealId): boolean {
-    if (this.state.revealed.has(revealId)) {
+    const hotspot = this.getCurrentRoom().hotspots.find((item) => item.revealId === revealId);
+    if (
+      !hotspot ||
+      this.state.revealed.has(revealId) ||
+      !(hotspot.requiredRevealIds ?? []).every((id) => this.state.revealed.has(id))
+    ) {
       return false;
     }
 
@@ -149,7 +154,12 @@ export class PresentationController {
   }
 
   public completeObjective(objectiveId: ObjectiveId): boolean {
-    if (this.state.completedObjectives.has(objectiveId)) {
+    const objective = this.getCurrentRoom().objectives.find((item) => item.id === objectiveId);
+    if (
+      !objective ||
+      this.state.completedObjectives.has(objectiveId) ||
+      !objective.requiredRevealIds.every((id) => this.state.revealed.has(id))
+    ) {
       return false;
     }
 
