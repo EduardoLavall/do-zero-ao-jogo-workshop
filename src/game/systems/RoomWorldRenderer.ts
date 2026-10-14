@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import type Phaser from "phaser";
 
 import type { PresentationState, RoomDefinition } from "../../presentation/types";
 import { getHotspotState } from "./HotspotSystem";
