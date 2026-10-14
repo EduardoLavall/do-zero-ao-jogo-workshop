@@ -3,14 +3,13 @@ import Phaser from "phaser";
 import { gameplayConfig } from "../config/gameplayConfig";
 import { PresentationController } from "../presentation/PresentationController";
 import { getRoomIndex, roomRegistry } from "../presentation/roomRegistry";
+import type { HotspotDefinition } from "../presentation/types";
+import { PresentationUI } from "../ui/PresentationUI";
 import { GAME_HEIGHT, GAME_WIDTH, WORLD_HEIGHT, WORLD_WIDTH } from "./config";
 import { Arrow } from "./entities/Arrow";
 import { Player } from "./entities/Player";
+import { getHotspotState, resolveHotspotTarget } from "./systems/HotspotSystem";
 import { InputController } from "./systems/InputController";
-import {
-  getHotspotState,
-  resolveHotspotTarget,
-} from "./systems/HotspotSystem";
 import {
   ENTRY_OFFSET,
   EXIT_ZONE_WIDTH,
@@ -31,25 +30,31 @@ export class PresentationScene extends Phaser.Scene {
   private readonly presentationController = new PresentationController();
 
   private inputController?: InputController;
+  private ui?: PresentationUI;
   private player?: Player;
   private ground?: Phaser.GameObjects.Rectangle;
   private roomBackdrop?: Phaser.GameObjects.Rectangle;
-  private roomTitleText?: Phaser.GameObjects.Text;
-  private roomPositionText?: Phaser.GameObjects.Text;
-  private controlStatusText?: Phaser.GameObjects.Text;
-  private actionStatusText?: Phaser.GameObjects.Text;
-  private previousExitText?: Phaser.GameObjects.Text;
-  private nextExitText?: Phaser.GameObjects.Text;
-  private readonly hotspotVisuals = new Map<string, Phaser.GameObjects.Arc>();
   private readonly hotspotDecorations: Phaser.GameObjects.GameObject[] = [];
   private readonly activeArrows = new Set<Arrow>();
   private readonly inFlightRevealIds = new Set<string>();
-  private selectedHotspotId?: string;
+  private readonly hotspotVisuals = new Map<string, Phaser.GameObjects.Arc>();
   private nextKey?: Phaser.Input.Keyboard.Key;
   private previousKey?: Phaser.Input.Keyboard.Key;
   private resetKey?: Phaser.Input.Keyboard.Key;
+  private enterKey?: Phaser.Input.Keyboard.Key;
+  private escapeKey?: Phaser.Input.Keyboard.Key;
+  private fullscreenKey?: Phaser.Input.Keyboard.Key;
+  private revealKey?: Phaser.Input.Keyboard.Key;
+  private helpKey?: Phaser.Input.Keyboard.Key;
   private transitionLocked = false;
   private blockedExitDirection: Exclude<RoomExitDirection, null> | null = null;
+  private lastControlEnabled = true;
+
+  private readonly syncUiLayout = (): void => {
+    requestAnimationFrame(() => {
+      this.ui?.syncLayout(this.game.canvas);
+    });
+  };
 
   public constructor() {
     super({ key: "presentation" });
@@ -75,44 +80,7 @@ export class PresentationScene extends Phaser.Scene {
         GAME_WIDTH - SAFE_AREA_MARGIN * 2,
         GAME_HEIGHT - SAFE_AREA_MARGIN * 2,
       )
-      .setStrokeStyle(3, 0x334155, 0.8);
-
-    this.add
-      .text(SAFE_AREA_MARGIN, 72, "DO ZERO AO JOGO", {
-        fontFamily: "monospace",
-        fontSize: "54px",
-        color: "#f7f3e8",
-      })
-      .setDepth(2);
-
-    this.roomTitleText = this.add
-      .text(SAFE_AREA_MARGIN, 145, "", {
-        fontFamily: "monospace",
-        fontSize: "30px",
-        color: "#8be9fd",
-      })
-      .setDepth(2);
-
-    this.roomPositionText = this.add
-      .text(SAFE_AREA_MARGIN, 192, "", {
-        fontFamily: "monospace",
-        fontSize: "20px",
-        color: "#94a3b8",
-      })
-      .setDepth(2);
-
-    this.add
-      .text(
-        SAFE_AREA_MARGIN,
-        240,
-        "Mouse move · RMB jump · LMB shoot · MMB control · N/P rooms · R reset",
-        {
-          fontFamily: "monospace",
-          fontSize: "18px",
-          color: "#cbd5e1",
-        },
-      )
-      .setDepth(2);
+      .setStrokeStyle(2, 0x334155, 0.45);
 
     this.ground = this.add.rectangle(
       GAME_WIDTH / 2,
@@ -127,27 +95,8 @@ export class PresentationScene extends Phaser.Scene {
       this.add.rectangle(x, GAME_HEIGHT - GROUND_HEIGHT - 20, 140, 14, 0x334155);
     }
 
-    this.previousExitText = this.add
-      .text(16, GAME_HEIGHT / 2, "← PREVIOUS", {
-        fontFamily: "monospace",
-        fontSize: "14px",
-        color: "#64748b",
-      })
-      .setOrigin(0, 0.5)
-      .setAngle(-90);
-
-    this.nextExitText = this.add
-      .text(GAME_WIDTH - 16, GAME_HEIGHT / 2, "NEXT →", {
-        fontFamily: "monospace",
-        fontSize: "14px",
-        color: "#64748b",
-      })
-      .setOrigin(1, 0.5)
-      .setAngle(90);
-
     this.player = new Player(this, ENTRY_OFFSET, getPlayerStartY());
     this.physics.add.collider(this.player.view, this.ground);
-
     this.inputController = new InputController(this);
 
     const keyboard = this.input.keyboard;
@@ -155,33 +104,34 @@ export class PresentationScene extends Phaser.Scene {
       this.nextKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
       this.previousKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
       this.resetKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+      this.enterKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+      this.escapeKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+      this.fullscreenKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+      this.revealKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+      this.helpKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
     }
 
-    this.controlStatusText = this.add
-      .text(GAME_WIDTH - SAFE_AREA_MARGIN, 72, "PLAYER CONTROL: ON", {
-        fontFamily: "monospace",
-        fontSize: "20px",
-        color: "#86efac",
-        backgroundColor: "#111827",
-        padding: { x: 14, y: 10 },
-      })
-      .setOrigin(1, 0)
-      .setDepth(2);
+    const root = document.getElementById("game-root");
+    if (!root) {
+      throw new Error("Missing #game-root for PresentationUI");
+    }
 
-    this.actionStatusText = this.add
-      .text(GAME_WIDTH - SAFE_AREA_MARGIN, 128, "", {
-        fontFamily: "monospace",
-        fontSize: "18px",
-        color: "#facc15",
-      })
-      .setOrigin(1, 0)
-      .setDepth(2);
-
+    this.ui = new PresentationUI(root, () => this.startPresentation());
+    this.ui.setStarted(this.presentationController.getState().started);
+    this.ui.syncLayout(this.game.canvas);
+    this.scale.on(Phaser.Scale.Events.RESIZE, this.syncUiLayout);
+    window.addEventListener("resize", this.syncUiLayout);
+    document.addEventListener("fullscreenchange", this.syncUiLayout);
     this.updateRoomVisuals();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.clearProjectiles();
       this.inputController?.destroy();
+      this.scale.off(Phaser.Scale.Events.RESIZE, this.syncUiLayout);
+      window.removeEventListener("resize", this.syncUiLayout);
+      document.removeEventListener("fullscreenchange", this.syncUiLayout);
+      this.ui?.destroy();
+      this.ui = undefined;
     });
   }
 
@@ -190,40 +140,80 @@ export class PresentationScene extends Phaser.Scene {
       return;
     }
 
+    this.handlePresentationKeys();
+
     const input = this.inputController.getState(this.player.x);
-    this.player.update(input);
+    if (input.controlEnabled !== this.lastControlEnabled) {
+      this.lastControlEnabled = input.controlEnabled;
+      this.refreshHud();
+    }
 
-    this.controlStatusText
-      ?.setText(`PLAYER CONTROL: ${input.controlEnabled ? "ON" : "OFF"}`)
-      .setColor(input.controlEnabled ? "#86efac" : "#fca5a5");
+    const blocked =
+      !this.presentationController.getState().started ||
+      this.transitionLocked ||
+      (this.ui?.isPanelOpen ?? false);
 
-    if (input.jumpRequested) {
-      this.flashAction("JUMP");
+    this.player.update(
+      blocked
+        ? { ...input, horizontalDirection: 0, jumpRequested: false, shootRequested: false }
+        : input,
+    );
+
+    if (blocked) {
+      return;
     }
 
     if (input.shootRequested) {
       this.shootAtHotspot(input.targetWorldX, input.targetWorldY);
     }
 
-    if (!this.transitionLocked) {
-      this.handleFallbackNavigation();
+    const exitDirection = resolveRoomExit(this.player.x, GAME_WIDTH);
 
-      const exitDirection = resolveRoomExit(this.player.x, GAME_WIDTH);
-
-      if (!exitDirection) {
-        this.blockedExitDirection = null;
-      } else if (this.blockedExitDirection === exitDirection) {
-        const boundaryX =
-          exitDirection === "next" ? GAME_WIDTH - EXIT_ZONE_WIDTH : EXIT_ZONE_WIDTH;
-        this.player.setPosition(boundaryX, this.player.y);
-        this.player.stopHorizontal();
-      } else {
-        this.requestRoomTransition(exitDirection);
-      }
+    if (!exitDirection) {
+      this.blockedExitDirection = null;
+    } else if (this.blockedExitDirection === exitDirection) {
+      const boundaryX =
+        exitDirection === "next" ? GAME_WIDTH - EXIT_ZONE_WIDTH : EXIT_ZONE_WIDTH;
+      this.player.setPosition(boundaryX, this.player.y);
+      this.player.stopHorizontal();
+    } else {
+      this.requestRoomTransition(exitDirection);
     }
   }
 
-  private handleFallbackNavigation(): void {
+  private startPresentation(): void {
+    if (this.presentationController.start()) {
+      this.ui?.setStarted(true);
+      this.refreshHud();
+      this.ui?.showToast("PRESS N TO ADVANCE · H FOR HELP");
+    }
+  }
+
+  private handlePresentationKeys(): void {
+    if (this.enterKey && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
+      if (!this.presentationController.getState().started) {
+        this.startPresentation();
+      } else if (this.ui?.isPanelOpen) {
+        this.ui.closePanel();
+      }
+    }
+
+    if (this.fullscreenKey && Phaser.Input.Keyboard.JustDown(this.fullscreenKey)) {
+      if (this.scale.isFullscreen) {
+        this.scale.stopFullscreen();
+      } else {
+        this.scale.startFullscreen();
+      }
+    }
+
+    if (this.escapeKey && Phaser.Input.Keyboard.JustDown(this.escapeKey)) {
+      this.ui?.closePanel();
+    }
+
+    if (!this.presentationController.getState().started || this.transitionLocked) {
+      return;
+    }
+
     if (this.nextKey && Phaser.Input.Keyboard.JustDown(this.nextKey)) {
       this.requestRoomTransition("next");
       return;
@@ -238,8 +228,37 @@ export class PresentationScene extends Phaser.Scene {
       this.clearProjectiles();
       this.presentationController.resetRoom();
       this.player?.setPosition(ENTRY_OFFSET, getPlayerStartY());
+      this.blockedExitDirection = null;
+      this.ui?.closePanel();
       this.updateRoomVisuals();
-      this.flashAction("ROOM RESET");
+      this.ui?.showToast("ROOM RESET");
+      return;
+    }
+
+    if (this.revealKey && Phaser.Input.Keyboard.JustDown(this.revealKey)) {
+      this.revealWithKeyboard();
+      return;
+    }
+
+    if (this.helpKey && Phaser.Input.Keyboard.JustDown(this.helpKey)) {
+      this.ui?.openHelp();
+    }
+  }
+
+  private revealWithKeyboard(): void {
+    const room = this.presentationController.getCurrentRoom();
+    const hotspot = room.hotspots.find(
+      (candidate) =>
+        getHotspotState(candidate, this.presentationController.getState()) === "available",
+    );
+
+    this.clearProjectiles();
+
+    if (hotspot) {
+      this.createImpact(hotspot.x, hotspot.y);
+      this.revealHotspot(hotspot);
+    } else {
+      this.ui?.openIntroduction(room.id);
     }
   }
 
@@ -259,13 +278,14 @@ export class PresentationScene extends Phaser.Scene {
       this.blockedExitDirection = direction;
       this.player.setPosition(boundaryX, this.player.y);
       this.player.stopHorizontal();
-      this.flashAction(direction === "next" ? "LAST ROOM" : "FIRST ROOM");
+      this.ui?.showToast(direction === "next" ? "LAST ROOM" : "FIRST ROOM");
       return;
     }
 
     this.transitionLocked = true;
     this.blockedExitDirection = null;
     this.clearProjectiles();
+    this.ui?.closePanel();
     this.player.stopHorizontal();
     this.cameras.main.fadeOut(TRANSITION_DURATION, 0, 0, 0);
 
@@ -288,21 +308,24 @@ export class PresentationScene extends Phaser.Scene {
   private updateRoomVisuals(): void {
     const room = this.presentationController.getCurrentRoom();
     const roomIndex = getRoomIndex(room.id);
-
-    this.roomTitleText?.setText(room.title.toUpperCase());
-    this.roomPositionText?.setText(`SLIDE ROOM ${roomIndex + 1} / ${roomRegistry.length}`);
-
     this.roomBackdrop?.setFillStyle(roomIndex % 2 === 0 ? 0x0b1020 : 0x111827);
-
-    this.previousExitText
-      ?.setText(roomIndex > 0 ? "← PREVIOUS" : "START")
-      .setColor(roomIndex > 0 ? "#94a3b8" : "#475569");
-
-    this.nextExitText
-      ?.setText(roomIndex < roomRegistry.length - 1 ? "NEXT →" : "END")
-      .setColor(roomIndex < roomRegistry.length - 1 ? "#94a3b8" : "#475569");
-
     this.renderHotspots();
+    this.refreshHud();
+  }
+
+  private refreshHud(): void {
+    if (!this.ui) {
+      return;
+    }
+
+    const room = this.presentationController.getCurrentRoom();
+    this.ui.updateHud(
+      room,
+      getRoomIndex(room.id),
+      roomRegistry.length,
+      this.presentationController.getState(),
+      this.lastControlEnabled,
+    );
   }
 
   private renderHotspots(): void {
@@ -311,7 +334,6 @@ export class PresentationScene extends Phaser.Scene {
     }
     this.hotspotDecorations.length = 0;
     this.hotspotVisuals.clear();
-    this.selectedHotspotId = undefined;
 
     const room = this.presentationController.getCurrentRoom();
     const state = this.presentationController.getState();
@@ -333,7 +355,7 @@ export class PresentationScene extends Phaser.Scene {
 
       const circle = this.add
         .circle(hotspot.x, hotspot.y, hotspot.radius, fillColor, 0.22)
-        .setStrokeStyle(4, strokeColor, 0.9)
+        .setStrokeStyle(4, strokeColor, 0.8)
         .setDepth(1);
 
       const marker = this.add
@@ -343,35 +365,21 @@ export class PresentationScene extends Phaser.Scene {
       const label = this.add
         .text(
           hotspot.x,
-          hotspot.y - hotspot.radius - 26,
+          hotspot.y - hotspot.radius - 34,
           `${hotspot.id} · ${hotspotState.toUpperCase()}`,
           {
             fontFamily: "monospace",
-            fontSize: "18px",
-            color:
-              hotspotState === "locked"
-                ? "#64748b"
-                : hotspotState === "revealed"
-                  ? "#86efac"
-                  : "#facc15",
+            fontSize: "26px",
+            color: hotspotState === "revealed" ? "#86efac" : "#f4f8ff",
             backgroundColor: "#0b1020",
-            padding: { x: 8, y: 5 },
+            padding: { x: 10, y: 7 },
           },
         )
         .setOrigin(0.5)
         .setDepth(2);
 
-      const radiusLabel = this.add
-        .text(hotspot.x, hotspot.y + 28, `r=${hotspot.radius}`, {
-          fontFamily: "monospace",
-          fontSize: "14px",
-          color: "#94a3b8",
-        })
-        .setOrigin(0.5)
-        .setDepth(2);
-
       this.hotspotVisuals.set(hotspot.id, circle);
-      this.hotspotDecorations.push(circle, marker, label, radiusLabel);
+      this.hotspotDecorations.push(circle, marker, label);
     }
   }
 
@@ -384,28 +392,19 @@ export class PresentationScene extends Phaser.Scene {
       this.presentationController.getState(),
     );
 
-    this.clearHotspotSelection();
-
     if (!target) {
-      this.flashAction(room.hotspots.length > 0 ? "NO VALID TARGET" : "SHOOT REQUEST");
+      this.ui?.showToast(room.hotspots.length > 0 ? "NO VALID TARGET" : "PRESS N TO ADVANCE");
       return;
     }
-
-    this.selectedHotspotId = target.hotspot.id;
-    this.hotspotVisuals
-      .get(target.hotspot.id)
-      ?.setStrokeStyle(8, 0x86efac, 1);
 
     if (!this.player || this.inFlightRevealIds.has(target.hotspot.revealId)) {
-      this.flashAction("TARGET ALREADY IN FLIGHT");
+      this.ui?.showToast("TARGET ALREADY IN FLIGHT");
       return;
     }
 
+    this.hotspotVisuals.get(target.hotspot.id)?.setStrokeStyle(8, 0x86efac, 1);
     this.player.faceTarget(target.hotspot.x);
     this.inFlightRevealIds.add(target.hotspot.revealId);
-    this.flashAction(
-      `SHOOT → ${target.hotspot.id} · d=${Math.round(target.distance)}`,
-    );
 
     let arrow: Arrow;
     arrow = new Arrow(
@@ -417,35 +416,33 @@ export class PresentationScene extends Phaser.Scene {
       () => {
         this.activeArrows.delete(arrow);
         this.inFlightRevealIds.delete(target.hotspot.revealId);
-        this.handleArrowHit(
-          target.hotspot.id,
-          target.hotspot.revealId,
-          target.hotspot.x,
-          target.hotspot.y,
-        );
+        this.createImpact(target.hotspot.x, target.hotspot.y);
+        this.revealHotspot(target.hotspot);
       },
     );
 
     this.activeArrows.add(arrow);
   }
 
-  private handleArrowHit(
-    hotspotId: string,
-    revealId: string,
-    x: number,
-    y: number,
-  ): void {
-    const revealed = this.presentationController.reveal(revealId);
-
-    this.createImpact(x, y);
-
-    if (revealed) {
-      this.flashAction(`REVEALED: ${hotspotId}`);
-      this.renderHotspots();
+  private revealHotspot(hotspot: HotspotDefinition): void {
+    if (!this.presentationController.reveal(hotspot.revealId)) {
       return;
     }
 
-    this.flashAction(`ALREADY REVEALED: ${hotspotId}`);
+    const room = this.presentationController.getCurrentRoom();
+    for (const objective of room.objectives) {
+      if (
+        objective.requiredRevealIds.every((revealId) =>
+          this.presentationController.getState().revealed.has(revealId),
+        )
+      ) {
+        this.presentationController.completeObjective(objective.id);
+      }
+    }
+
+    this.renderHotspots();
+    this.refreshHud();
+    this.ui?.openReveal(hotspot.revealId);
   }
 
   private createImpact(x: number, y: number): void {
@@ -471,37 +468,5 @@ export class PresentationScene extends Phaser.Scene {
 
     this.activeArrows.clear();
     this.inFlightRevealIds.clear();
-  }
-
-  private clearHotspotSelection(): void {
-    if (!this.selectedHotspotId) {
-      return;
-    }
-
-    const room = this.presentationController.getCurrentRoom();
-    const hotspot = room.hotspots.find((item) => item.id === this.selectedHotspotId);
-
-    if (hotspot) {
-      const state = getHotspotState(hotspot, this.presentationController.getState());
-      const strokeColor =
-        state === "locked" ? 0x64748b : state === "revealed" ? 0x86efac : 0xfacc15;
-      this.hotspotVisuals.get(hotspot.id)?.setStrokeStyle(4, strokeColor, 0.9);
-    }
-
-    this.selectedHotspotId = undefined;
-  }
-
-  private flashAction(label: string): void {
-    this.actionStatusText?.setText(label).setAlpha(1);
-
-    if (this.actionStatusText) {
-      this.tweens.killTweensOf(this.actionStatusText);
-      this.tweens.add({
-        targets: this.actionStatusText,
-        alpha: 0,
-        duration: 600,
-        ease: "Quad.Out",
-      });
-    }
   }
 }
