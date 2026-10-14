@@ -1,4 +1,6 @@
-# Do Zero ao Jogo — Workshop
+# Do Zero ao Jogo
+
+> **Status do workshop (2026-10-14):** Temos 11 storyboards e uma Room 6 com seis terminais, diagramas Unity/C# e revelações. As mecânicas de aprendizado **ainda não estão prontas**: quase todas as interações atuais apenas abrem texto. A próxima etapa é [Interactive Learning](./docs/INTERACTIVE-LEARNING.md), issues #37–#41, **antes de juice/arte/áudio**. — Workshop
 
 Apresentação interativa sobre desenvolvimento de jogos.
 
@@ -145,3 +147,10 @@ Pressione Enter, feche o painel inicial e use **6** para abrir diretamente a Roo
 Use E para revelar sem flecha, N/P para navegar, R para resetar e ESC para fechar painéis. Quando todos os seis terminais estiverem revelados, E mostra a síntese da sala. Consulte [docs/ENGINE-LAB.md](./docs/ENGINE-LAB.md).
 
 Arte final, SFX e teste físico de projetor ainda dependem de #24/#25/#26/#23.
+
+
+## Próxima fase: Interactive Learning
+
+Uma sala só é "jogável" se **uma escolha ou variável alterar o estado simulado e provocar resultado diferente**. As 11 mecânicas previstas e as regras de fallback estão em [INTERACTIVE-LEARNING.md](./docs/INTERACTIVE-LEARNING.md).
+
+Ordem: **#38 (infra de demos)** → **#39/#40 (Room 6 com Game Loop + física manipuláveis)** → **#28/#29/#30 (mecânicas de todas as salas)** → **#24/#25/#26 (juice, sprites e SFX)** → **#41/#23/#31 (QA e palco)**. Nesta etapa estamos atualizando planejamento e issues; **não implementando simulações ainda**.
