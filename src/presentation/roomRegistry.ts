@@ -44,7 +44,7 @@ export const roomRegistry: readonly RoomDefinition[] = [
       {
         id: "hotspot-locked",
         x: 1580,
-        y: 390,
+        y: 570,
         radius: 130,
         revealId: "test-locked",
         requiredRevealIds: ["test-alpha"],
