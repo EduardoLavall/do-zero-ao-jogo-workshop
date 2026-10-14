@@ -19,9 +19,15 @@ export type PresentationEvent =
 
 export type PresentationEventListener = (event: PresentationEvent) => void;
 
+interface SavedRoomProgress {
+  revealed: Set<RevealId>;
+  completedObjectives: Set<ObjectiveId>;
+}
+
 export class PresentationController {
   private state: PresentationState;
   private readonly listeners = new Set<PresentationEventListener>();
+  private readonly progressByRoom = new Map<RoomId, SavedRoomProgress>();
 
   public constructor(initialRoomId: RoomId = roomRegistry[0]?.id ?? "") {
     if (!getRoomById(initialRoomId)) {
@@ -37,11 +43,9 @@ export class PresentationController {
 
   public getCurrentRoom(): RoomDefinition {
     const room = getRoomById(this.state.roomId);
-
     if (!room) {
       throw new Error(`Unknown current room: ${this.state.roomId}`);
     }
-
     return room;
   }
 
@@ -57,10 +61,7 @@ export class PresentationController {
 
   public subscribe(listener: PresentationEventListener): () => void {
     this.listeners.add(listener);
-
-    return () => {
-      this.listeners.delete(listener);
-    };
+    return () => this.listeners.delete(listener);
   }
 
   public enterRoom(roomId: RoomId): boolean {
@@ -68,34 +69,30 @@ export class PresentationController {
       return false;
     }
 
-    this.state = { ...createInitialPresentationState(roomId), started: this.state.started };
+    this.activateRoom(roomId);
     this.emit({ type: "room:entered", roomId });
     return true;
   }
 
   public nextRoom(): boolean {
-    const currentIndex = getRoomIndex(this.state.roomId);
-    const nextRoom = roomRegistry[currentIndex + 1];
-
+    const nextRoom = roomRegistry[getRoomIndex(this.state.roomId) + 1];
     if (!nextRoom) {
       return false;
     }
 
-    this.state = { ...createInitialPresentationState(nextRoom.id), started: this.state.started };
+    this.activateRoom(nextRoom.id);
     this.emit({ type: "presentation:next", roomId: nextRoom.id });
     this.emit({ type: "room:entered", roomId: nextRoom.id });
     return true;
   }
 
   public previousRoom(): boolean {
-    const currentIndex = getRoomIndex(this.state.roomId);
-    const previousRoom = roomRegistry[currentIndex - 1];
-
+    const previousRoom = roomRegistry[getRoomIndex(this.state.roomId) - 1];
     if (!previousRoom) {
       return false;
     }
 
-    this.state = { ...createInitialPresentationState(previousRoom.id), started: this.state.started };
+    this.activateRoom(previousRoom.id);
     this.emit({ type: "presentation:previous", roomId: previousRoom.id });
     this.emit({ type: "room:entered", roomId: previousRoom.id });
     return true;
@@ -103,42 +100,69 @@ export class PresentationController {
 
   public resetRoom(): void {
     const roomId = this.state.roomId;
-    this.state = { ...createInitialPresentationState(roomId), started: this.state.started };
+    this.progressByRoom.delete(roomId);
+    this.activateRoom(roomId);
     this.emit({ type: "presentation:reset", roomId });
   }
 
   public reveal(revealId: RevealId): boolean {
-    if (this.state.revealed.has(revealId)) {
+    const hotspot = this.getCurrentRoom().hotspots.find((item) => item.revealId === revealId);
+    if (
+      !hotspot ||
+      this.state.revealed.has(revealId) ||
+      !(hotspot.requiredRevealIds ?? []).every((id) => this.state.revealed.has(id))
+    ) {
       return false;
     }
 
     const revealed = new Set(this.state.revealed);
     revealed.add(revealId);
-
-    this.state = {
-      ...this.state,
-      revealed,
-    };
-
+    this.state = { ...this.state, revealed };
+    this.persistCurrentProgress();
     this.emit({ type: "hotspot:revealed", revealId });
+
+    for (const objective of this.getCurrentRoom().objectives) {
+      if (objective.requiredRevealIds.every((id) => revealed.has(id))) {
+        this.completeObjective(objective.id);
+      }
+    }
+
     return true;
   }
 
   public completeObjective(objectiveId: ObjectiveId): boolean {
-    if (this.state.completedObjectives.has(objectiveId)) {
+    const objective = this.getCurrentRoom().objectives.find((item) => item.id === objectiveId);
+    if (
+      !objective ||
+      this.state.completedObjectives.has(objectiveId) ||
+      !objective.requiredRevealIds.every((id) => this.state.revealed.has(id))
+    ) {
       return false;
     }
 
     const completedObjectives = new Set(this.state.completedObjectives);
     completedObjectives.add(objectiveId);
-
-    this.state = {
-      ...this.state,
-      completedObjectives,
-    };
-
+    this.state = { ...this.state, completedObjectives };
+    this.persistCurrentProgress();
     this.emit({ type: "objective:completed", objectiveId });
     return true;
+  }
+
+  private activateRoom(roomId: RoomId): void {
+    const progress = this.progressByRoom.get(roomId);
+    this.state = {
+      ...createInitialPresentationState(roomId),
+      started: this.state.started,
+      revealed: new Set(progress?.revealed ?? []),
+      completedObjectives: new Set(progress?.completedObjectives ?? []),
+    };
+  }
+
+  private persistCurrentProgress(): void {
+    this.progressByRoom.set(this.state.roomId, {
+      revealed: new Set(this.state.revealed),
+      completedObjectives: new Set(this.state.completedObjectives),
+    });
   }
 
   private emit(event: PresentationEvent): void {
