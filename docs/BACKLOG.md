@@ -73,23 +73,23 @@ Legenda:
 
 ## Fase 4 — UI e legibilidade de palco (#8, #23)
 
-- [ ] **P0** projeção 1280×720 / 1920×1080 / 1280×800 sem clipping
-- [ ] **P0** safe area de conteúdo independente de exit zones/ornamento
+- [ ] **P0** projeção 1280×720 / 1920×1080 / 1280×800 sem clipping (geometria testada; inspeção visual pendente)
+- [x] **P0** safe area de conteúdo independente de exit zones/ornamento no CSS (96 px laterais)
 - [ ] **P0** tipografia e código legíveis da última fileira
 - [ ] **P0** conteúdo/hotspots coordenados com DOM overlays em resize
-- [ ] **P0** presenter fallback revelar/avançar mesmo sem usar flecha
-- [ ] **P1** atalhos e instruções sob demanda, não microtexto permanente
-- [ ] **P1** fullscreen / foco / ESC / modo reduzido
+- [x] **P0** presenter fallback revelar/avançar mesmo sem usar flecha
+- [x] **P1** atalhos e instruções sob demanda, não microtexto permanente
+- [x] **P1** fullscreen / foco / ESC / modo reduzido
 
 ## Fase 4 — UI
 
-- [ ] **P1** menu Press Enter to Begin
-- [ ] **P1** HUD de room
-- [ ] **P1** objectives checklist
-- [ ] **P1** overlay/panel controller
-- [ ] **P1** progress
+- [x] **P1** menu Press Enter to Begin
+- [x] **P1** HUD de room
+- [x] **P1** objectives checklist (room de testes)
+- [x] **P1** overlay/panel controller
+- [x] **P1** progress
 - [ ] **P1** fullscreen
-- [ ] **P0** fallback next/previous/reset
+- [x] **P0** fallback next/previous/reset
 - [ ] **P2** credits controller
 
 ## Storyboard e arquitetura de conteúdo (#27)
