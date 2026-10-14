@@ -392,3 +392,11 @@ Referências: [Auditoria](./AUDITORIA-PRONTIDAO.md) · [Projeção](./PROJECAO-Q
 - Testes de alinhamento não substituem screenshot e leitura na última fileira: #23 **permanece aberta**.
 
 **Cuidado:** UI projetável de teste não equivale a conteúdos das 11 salas. #27 e #9 são as próximas etapas.
+
+## #27 — Storyboards executáveis e progresso por room (2026-10-14)
+
+`roomStoryboards.ts` descreve a fonte de verdade das **11 rooms narrativas**, com contrato tipado `RoomStoryboard` para objetivos de aprendizagem, perguntas, fala, duração, cena, objetos, reveals, painéis, assets/SFX planejados e referências. `roomRegistry.ts` converte os storyboards em `RoomDefinition`/hotspots/objectives e mantém `developmentRoom` fora do percurso N/P (atalho T). `RoomWorldRenderer` desenha placeholders e estados do hotspot genericamente; `PresentationScene` só orquestra, e `presentationCopy.ts` consulta os próprios dados da room.
+
+`PresentationController` preserva reveals e objetivos **por room e durante a sessão** (Map in-memory). `reveal` rejeita IDs desconhecidos, locked e repetidos, e completa objetivos automaticamente. `R` apaga só a sala atual; voltar não destrói progresso. Não se usa `localStorage` para isso nesta issue.
+
+Todos os assets/sounds são referências **planejadas** — não carregá-los até as próximas etapas (#25/#26). Status de produção continua `storyboard`; a versão audiovisual/visual final será feita em #9, #28–#30. Ver [STORYBOARDS](./STORYBOARDS.md) e [CONTENT-PIPELINE](./CONTENT-PIPELINE.md).
