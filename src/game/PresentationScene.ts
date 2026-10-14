@@ -9,6 +9,7 @@ import { GAME_HEIGHT, GAME_WIDTH, WORLD_HEIGHT, WORLD_WIDTH } from "./config";
 import { Arrow } from "./entities/Arrow";
 import { Player } from "./entities/Player";
 import { getHotspotState, resolveHotspotTarget } from "./systems/HotspotSystem";
+import { RoomRenderer } from "./systems/RoomRenderer";
 import { InputController } from "./systems/InputController";
 import {
   ENTRY_OFFSET,
@@ -34,10 +35,9 @@ export class PresentationScene extends Phaser.Scene {
   private player?: Player;
   private ground?: Phaser.GameObjects.Rectangle;
   private roomBackdrop?: Phaser.GameObjects.Rectangle;
-  private readonly hotspotDecorations: Phaser.GameObjects.GameObject[] = [];
+  private roomRenderer?: RoomRenderer;
   private readonly activeArrows = new Set<Arrow>();
   private readonly inFlightRevealIds = new Set<string>();
-  private readonly hotspotVisuals = new Map<string, Phaser.GameObjects.Arc>();
   private nextKey?: Phaser.Input.Keyboard.Key;
   private previousKey?: Phaser.Input.Keyboard.Key;
   private resetKey?: Phaser.Input.Keyboard.Key;
@@ -90,6 +90,7 @@ export class PresentationScene extends Phaser.Scene {
       0x1e293b,
     );
     this.physics.add.existing(this.ground, true);
+    this.roomRenderer = new RoomRenderer(this, this.roomBackdrop);
 
     for (let x = 220; x < GAME_WIDTH; x += 360) {
       this.add.rectangle(x, GAME_HEIGHT - GROUND_HEIGHT - 20, 140, 14, 0x334155);
@@ -130,6 +131,7 @@ export class PresentationScene extends Phaser.Scene {
       this.scale.off(Phaser.Scale.Events.RESIZE, this.syncUiLayout);
       window.removeEventListener("resize", this.syncUiLayout);
       document.removeEventListener("fullscreenchange", this.syncUiLayout);
+      this.roomRenderer?.destroy();
       this.ui?.destroy();
       this.ui = undefined;
     });
@@ -185,7 +187,7 @@ export class PresentationScene extends Phaser.Scene {
     if (this.presentationController.start()) {
       this.ui?.setStarted(true);
       this.refreshHud();
-      this.ui?.showToast("PRESS N TO ADVANCE · H FOR HELP");
+      this.ui?.openIntroduction(this.presentationController.getCurrentRoom().id);
     }
   }
 
@@ -295,6 +297,7 @@ export class PresentationScene extends Phaser.Scene {
       }
 
       this.updateRoomVisuals();
+      this.ui?.openIntroduction(this.presentationController.getCurrentRoom().id);
       this.player.setPosition(getEntryX(direction, GAME_WIDTH), getPlayerStartY());
       this.cameras.main.setScroll(0, 0);
       this.cameras.main.fadeIn(TRANSITION_DURATION, 0, 0, 0);
@@ -307,9 +310,7 @@ export class PresentationScene extends Phaser.Scene {
 
   private updateRoomVisuals(): void {
     const room = this.presentationController.getCurrentRoom();
-    const roomIndex = getRoomIndex(room.id);
-    this.roomBackdrop?.setFillStyle(roomIndex % 2 === 0 ? 0x0b1020 : 0x111827);
-    this.renderHotspots();
+    this.roomRenderer?.render(room, this.presentationController.getState());
     this.refreshHud();
   }
 
@@ -326,61 +327,6 @@ export class PresentationScene extends Phaser.Scene {
       this.presentationController.getState(),
       this.lastControlEnabled,
     );
-  }
-
-  private renderHotspots(): void {
-    for (const decoration of this.hotspotDecorations) {
-      decoration.destroy();
-    }
-    this.hotspotDecorations.length = 0;
-    this.hotspotVisuals.clear();
-
-    const room = this.presentationController.getCurrentRoom();
-    const state = this.presentationController.getState();
-
-    for (const hotspot of room.hotspots) {
-      const hotspotState = getHotspotState(hotspot, state);
-      const fillColor =
-        hotspotState === "locked"
-          ? 0x334155
-          : hotspotState === "revealed"
-            ? 0x14532d
-            : 0x1e293b;
-      const strokeColor =
-        hotspotState === "locked"
-          ? 0x64748b
-          : hotspotState === "revealed"
-            ? 0x86efac
-            : 0xfacc15;
-
-      const circle = this.add
-        .circle(hotspot.x, hotspot.y, hotspot.radius, fillColor, 0.22)
-        .setStrokeStyle(4, strokeColor, 0.8)
-        .setDepth(1);
-
-      const marker = this.add
-        .circle(hotspot.x, hotspot.y, 18, strokeColor, 1)
-        .setDepth(1);
-
-      const label = this.add
-        .text(
-          hotspot.x,
-          hotspot.y - hotspot.radius - 34,
-          `${hotspot.id} · ${hotspotState.toUpperCase()}`,
-          {
-            fontFamily: "monospace",
-            fontSize: "26px",
-            color: hotspotState === "revealed" ? "#86efac" : "#f4f8ff",
-            backgroundColor: "#0b1020",
-            padding: { x: 10, y: 7 },
-          },
-        )
-        .setOrigin(0.5)
-        .setDepth(2);
-
-      this.hotspotVisuals.set(hotspot.id, circle);
-      this.hotspotDecorations.push(circle, marker, label);
-    }
   }
 
   private shootAtHotspot(pointerX: number, pointerY: number): void {
@@ -402,7 +348,7 @@ export class PresentationScene extends Phaser.Scene {
       return;
     }
 
-    this.hotspotVisuals.get(target.hotspot.id)?.setStrokeStyle(8, 0x86efac, 1);
+    this.roomRenderer?.highlight(target.hotspot.id);
     this.player.faceTarget(target.hotspot.x);
     this.inFlightRevealIds.add(target.hotspot.revealId);
 
@@ -428,18 +374,10 @@ export class PresentationScene extends Phaser.Scene {
       return;
     }
 
-    const room = this.presentationController.getCurrentRoom();
-    for (const objective of room.objectives) {
-      if (
-        objective.requiredRevealIds.every((revealId) =>
-          this.presentationController.getState().revealed.has(revealId),
-        )
-      ) {
-        this.presentationController.completeObjective(objective.id);
-      }
-    }
-
-    this.renderHotspots();
+    this.roomRenderer?.render(
+      this.presentationController.getCurrentRoom(),
+      this.presentationController.getState(),
+    );
     this.refreshHud();
     this.ui?.openReveal(hotspot.revealId);
   }

@@ -16,7 +16,7 @@ Leia, nesta ordem:
 4. a issue atual
 5. arquivos diretamente relacionados à mudança
 
-Consulte `docs/PLANO-MESTRE.md` para conteúdo e comportamento das rooms.
+Consulte `docs/PLANO-MESTRE.md` e `docs/STORYBOARDS.md` para conteúdo, comportamento e cues das rooms. Conteúdo autorado fica em `src/rooms/workshopRooms.ts`.
 
 ## Stack obrigatória
 

@@ -392,3 +392,18 @@ Referências: [Auditoria](./AUDITORIA-PRONTIDAO.md) · [Projeção](./PROJECAO-Q
 - Testes de alinhamento não substituem screenshot e leitura na última fileira: #23 **permanece aberta**.
 
 **Cuidado:** UI projetável de teste não equivale a conteúdos das 11 salas. #27 e #9 são as próximas etapas.
+
+
+## Authoring de salas data-driven — #27
+
+- `src/presentation/types.ts`: `RoomStoryboard`, `StoryboardRoomDefinition`, `PanelContent`, `StageProp`, `HotspotDefinition`.
+- `src/rooms/workshopRooms.ts`: 10 salas temáticas + Final (11 entradas); por sala: `learningGoal`, `thesis`, `takeaway`, `presenterCue`, `transitionCue`, `durationSeconds`, `introduction`, `visual`, `plannedAssets`, `hotspots`, `objectives`. Objeto tipado com `satisfies`.
+- `src/presentation/roomRegistry.ts`: fonte de navegação dos 11 registros. Antiga sala de testes substituída pela Room 2 temática.
+- `src/ui/presentationCopy.ts`: pega intro e conteúdo de hotspot diretamente no registry, sem switch/hardcode de IDs. A `PresentationUI` usa o mesmo modelo de progresso.
+- `src/game/systems/RoomRenderer.ts`: geometria placeholder a partir de `visual.props`, `accentColor`, `backgroundColor`, posição de hotspot e estado. `PresentationScene` orquestra input, flechas e navegação.
+- **Política de sessão:** `PresentationController` mantém um mapa de `roomId -> reveals/objetivos` ao navegar; `R` elimina só progresso da room atual, e `started` permanece true. Não salvar em localStorage nesta issue.
+- O estado da UI e os objetivos dependem de `PresentationState`, não do sprite. O controller deriva automaticamente objetivos quando todos os `requiredRevealIds` são revelados.
+- Conteúdo provisório pode ser apresentado agora por clique/flecha ou teclado `E`; textos técnicos e mídia finais continuam nas issues #9/#25/#26.
+- O prefixo dos IDs dos hotspots/reveals é a room (ex. `room-06-game-loop`). Validação automatizada impede dependências cíclicas sem saída e orçamento fora de 13:30 + 1:30.
+- Cuidados: duração é meta de roteiro, **não** cronômetro forçando transições; a fala-guia não deve ser exibida à plateia. Arquivos em `plannedAssets` são IDs **planejados**, sem fetch em runtime. [STORYBOARDS.md](./STORYBOARDS.md).
+

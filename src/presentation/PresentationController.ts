@@ -19,9 +19,19 @@ export type PresentationEvent =
 
 export type PresentationEventListener = (event: PresentationEvent) => void;
 
+interface RoomProgress {
+  revealed: ReadonlySet<RevealId>;
+  completedObjectives: ReadonlySet<ObjectiveId>;
+}
+
+/**
+ * The presentation state is authoritative. Navigation retains each room's
+ * reveals and objectives for backwards review; R clears the current room only.
+ */
 export class PresentationController {
   private state: PresentationState;
   private readonly listeners = new Set<PresentationEventListener>();
+  private readonly progressByRoom = new Map<RoomId, RoomProgress>();
 
   public constructor(initialRoomId: RoomId = roomRegistry[0]?.id ?? "") {
     if (!getRoomById(initialRoomId)) {
@@ -68,7 +78,8 @@ export class PresentationController {
       return false;
     }
 
-    this.state = { ...createInitialPresentationState(roomId), started: this.state.started };
+    this.saveRoomProgress();
+    this.restoreRoomProgress(roomId);
     this.emit({ type: "room:entered", roomId });
     return true;
   }
@@ -81,7 +92,8 @@ export class PresentationController {
       return false;
     }
 
-    this.state = { ...createInitialPresentationState(nextRoom.id), started: this.state.started };
+    this.saveRoomProgress();
+    this.restoreRoomProgress(nextRoom.id);
     this.emit({ type: "presentation:next", roomId: nextRoom.id });
     this.emit({ type: "room:entered", roomId: nextRoom.id });
     return true;
@@ -95,7 +107,8 @@ export class PresentationController {
       return false;
     }
 
-    this.state = { ...createInitialPresentationState(previousRoom.id), started: this.state.started };
+    this.saveRoomProgress();
+    this.restoreRoomProgress(previousRoom.id);
     this.emit({ type: "presentation:previous", roomId: previousRoom.id });
     this.emit({ type: "room:entered", roomId: previousRoom.id });
     return true;
@@ -103,7 +116,13 @@ export class PresentationController {
 
   public resetRoom(): void {
     const roomId = this.state.roomId;
-    this.state = { ...createInitialPresentationState(roomId), started: this.state.started };
+    const started = this.state.started;
+    this.progressByRoom.delete(roomId);
+    this.state = {
+      ...createInitialPresentationState(roomId),
+      started,
+      credits: roomId === "room-final",
+    };
     this.emit({ type: "presentation:reset", roomId });
   }
 
@@ -115,12 +134,17 @@ export class PresentationController {
     const revealed = new Set(this.state.revealed);
     revealed.add(revealId);
 
-    this.state = {
-      ...this.state,
-      revealed,
-    };
-
+    this.state = { ...this.state, revealed };
+    this.saveRoomProgress();
     this.emit({ type: "hotspot:revealed", revealId });
+
+    // Objectives are derived from content data, never from sprite visibility.
+    for (const objective of this.getCurrentRoom().objectives) {
+      if (objective.requiredRevealIds.every((id) => revealed.has(id))) {
+        this.completeObjective(objective.id);
+      }
+    }
+
     return true;
   }
 
@@ -131,14 +155,29 @@ export class PresentationController {
 
     const completedObjectives = new Set(this.state.completedObjectives);
     completedObjectives.add(objectiveId);
-
-    this.state = {
-      ...this.state,
-      completedObjectives,
-    };
-
+    this.state = { ...this.state, completedObjectives };
+    this.saveRoomProgress();
     this.emit({ type: "objective:completed", objectiveId });
     return true;
+  }
+
+  private saveRoomProgress(): void {
+    this.progressByRoom.set(this.state.roomId, {
+      revealed: new Set(this.state.revealed),
+      completedObjectives: new Set(this.state.completedObjectives),
+    });
+  }
+
+  private restoreRoomProgress(roomId: RoomId): void {
+    const progress = this.progressByRoom.get(roomId);
+    const started = this.state.started;
+    this.state = {
+      ...createInitialPresentationState(roomId),
+      started,
+      credits: roomId === "room-final",
+      revealed: new Set(progress?.revealed ?? []),
+      completedObjectives: new Set(progress?.completedObjectives ?? []),
+    };
   }
 
   private emit(event: PresentationEvent): void {

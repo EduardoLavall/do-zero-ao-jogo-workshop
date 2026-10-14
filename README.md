@@ -35,9 +35,10 @@ Leia antes de implementar:
 5. [docs/BACKLOG.md](./docs/BACKLOG.md)
 6. [docs/PLANO-MESTRE.md](./docs/PLANO-MESTRE.md)
 7. [docs/FONTES.md](./docs/FONTES.md)
-8. [docs/AUDITORIA-PRONTIDAO.md](./docs/AUDITORIA-PRONTIDAO.md)
-9. [docs/PROJECAO-QA.md](./docs/PROJECAO-QA.md)
-10. [docs/ART-AUDIO-PRODUCTION.md](./docs/ART-AUDIO-PRODUCTION.md)
+8. [docs/STORYBOARDS.md](./docs/STORYBOARDS.md)
+9. [docs/AUDITORIA-PRONTIDAO.md](./docs/AUDITORIA-PRONTIDAO.md)
+10. [docs/PROJECAO-QA.md](./docs/PROJECAO-QA.md)
+11. [docs/ART-AUDIO-PRODUCTION.md](./docs/ART-AUDIO-PRODUCTION.md)
 
 ## Princípio do projeto
 
@@ -81,9 +82,7 @@ npm run test:watch
 
 ## Estado atual
 
-**Estado de protótipo técnico (2026-10-14)**: shell Phaser/Vite, player mouse-first, 2 rooms placeholder (01 vazia + 02 de testes), HotspotSystem e Arrow→reveal. **As 10 salas de conteúdo e o encerramento ainda não estão implementados**. UI DOM, sprites, áudio, assets e teste em projetor ainda faltam.
-
-**UI inicial (#8):** menu Enter, HUD, objetivo/progresso, overlay HTML/CSS alinhado ao canvas e fallback E. **Ainda falta validar #23** em projetor real e produzir as salas finais. Próximo: #27 (storyboards) e #9 (Room 6 vertical slice); depois #24/#25/#26 (juice/arte/SFX) e #28/#29/#30 (conteúdo). #20 Fase 2 é painel F2. #31 é hardening final.
+**Estado após #27 (2026-10-14):** o registry contém **11 salas temáticas com 36 hotspots e painéis didáticos provisórios**. Todos os conteúdos e posições ficam em `src/rooms/workshopRooms.ts` e são narrados em [docs/STORYBOARDS.md](./docs/STORYBOARDS.md). Há meta de 13m30s de apresentação + 1m30s de contingência. O jogo mantém reveals ao voltar à sala; **R** reinicia apenas a sala atual. **#9** transformará a Room 6 em vertical slice visual de referência; **#23** continua exigindo validação física em projetor.
 
 ### Controles na apresentação
 
@@ -100,7 +99,7 @@ npm run test:watch
 | Botão direito | Pular |
 | Botão do meio | Ativar/desativar controle do personagem |
 
-A Room 02 continua sendo um **laboratório de testes**, não a Room 2 definitiva do workshop. Painéis congelam o movimento do personagem enquanto abertos. A interface usa uma camada 1920×1080 que segue os bounds do canvas Phaser (FIT/letterbox).
+A antiga Room 02 de laboratório foi substituída por uma sala temática provisória de história dos jogos. Todas as onze salas são navegáveis; os detalhes visuais finais virão nas issues de produção. Painéis congelam o movimento do personagem enquanto abertos. A interface usa uma camada 1920×1080 que segue os bounds do canvas Phaser (FIT/letterbox).
 
 Produção e critérios: [Auditoria de prontidão](./docs/AUDITORIA-PRONTIDAO.md), [Guia de projeção](./docs/PROJECAO-QA.md) e [Plano de arte/áudio](./docs/ART-AUDIO-PRODUCTION.md).
 
