@@ -13,7 +13,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-01-objective",
-        "label": "Entender: Jogo = regras + interação + feedback (modelo didático).",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-01-regras",
           "room-01-interacao",
@@ -112,7 +112,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-02-objective",
-        "label": "Entender: Tecnologia muda o suporte — não a necessidade de regras e escolhas.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-02-tabuleiro",
           "room-02-eletronicos",
@@ -210,7 +210,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-03-objective",
-        "label": "Entender: Computação e jogos evoluíram em conjunto.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-03-cpu-gpu",
           "room-03-memoria-rede",
@@ -308,7 +308,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-04-objective",
-        "label": "Entender: Design + programação + arte + áudio trabalham juntos.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-04-design",
           "room-04-programacao",
@@ -419,7 +419,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-05-objective",
-        "label": "Entender: Prototipar → testar → observar → ajustar.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-05-mecanicas",
           "room-05-loop",
@@ -518,7 +518,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-06-objective",
-        "label": "Entender: Input → Update → Física → Render → Feedback.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-06-game-loop",
           "room-06-lifecycle",
@@ -678,7 +678,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-07-objective",
-        "label": "Entender: Concept → Sprite → Animação → Engine.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-07-concept",
           "room-07-sprites",
@@ -776,7 +776,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-08-objective",
-        "label": "Entender: O mesmo salto se sente diferente com som e feedback.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-08-sfx",
           "room-08-music",
@@ -875,7 +875,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-09-objective",
-        "label": "Entender: Input → intenção → FixedUpdate → Rigidbody2D → colisão → animação/som.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-09-intent",
           "room-09-force",
@@ -1006,7 +1006,7 @@ export const workshopRooms = [
     "objectives": [
       {
         "id": "room-10-objective",
-        "label": "Entender: Nenhuma disciplina cria o jogo sozinha.",
+        "label": "Concluir as revelações",
         "requiredRevealIds": [
           "room-10-prototype",
           "room-10-systems",
