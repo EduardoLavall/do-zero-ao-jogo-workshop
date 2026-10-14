@@ -377,3 +377,18 @@ Nenhuma arte final é necessária para validar a arquitetura.
 - **Projeção**: manter 1920×1080/FIT; não confundir SAFE_AREA_MARGIN visual atual (29px) com área segura de conteúdo (alvo ~96px). Saída 720p exige corpo maior do que os 14–20px lógicos atuais.
 
 Referências: [Auditoria](./AUDITORIA-PRONTIDAO.md) · [Projeção](./PROJECAO-QA.md) · [Arte e áudio](./ART-AUDIO-PRODUCTION.md) · [Roadmap](./ROADMAP.md).
+
+
+## Implementação da interface de apresentação — #8 (2026-10-14)
+
+- `src/ui/PresentationUI.ts`: menu Enter/Click, HUD por `PresentationState`, objetivos/progresso, conteúdo/ajuda, toast e desmontagem.
+- `src/ui/presentationCopy.ts`: textos provisórios separados da cena (Room 01 e sala de testes); a #27 fornecerá o contrato real para as demais rooms.
+- `src/ui/projection.ts`: deriva `left/top/scaleX/scaleY` dos bounds reais do canvas em relação a `#game-root`; `Phaser.Scale.FIT` permanece fonte de verdade. Tests cobrem 1080p, 720p e 16:10.
+- `src/styles/presentation.css`: camada DOM 1920×1080 com `transform-origin: top left`, margem interna de 96px para conteúdo, fontes projetáveis, opção `prefers-reduced-motion`.
+- Interação com o canvas: `pointer-events: none` sobre HUD/painéis; somente menu inicial recebe clique. Painel aberto congela input de gameplay, mas **não** bloqueia atalhos.
+- Controller guarda `started` e preserva esse estado através de navegação e reset.
+- Teclas: Enter inicia/fecha painel, N/P trocam room, R reinicia, E revela próximo alvo disponível sem flecha, H abre ajuda, ESC fecha painel, F alterna fullscreen.
+- Na Room 02 de testes há um objetivo real de 4 reveals, concluído ao satisfazer as dependências. O atalho E chama `reveal` do core e cancela flechas pendentes antes de pular.
+- Testes de alinhamento não substituem screenshot e leitura na última fileira: #23 **permanece aberta**.
+
+**Cuidado:** UI projetável de teste não equivale a conteúdos das 11 salas. #27 e #9 são as próximas etapas.
