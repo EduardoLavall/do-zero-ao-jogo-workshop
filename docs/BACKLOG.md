@@ -158,7 +158,7 @@ Legenda:
 
 ## Ensaio e release (#31)
 
-- [ ] **P0** smoke em navegador, navegação N/P/R/F/ESC e skip de revelaçōes
+- [ ] **P0** smoke em navegador, navegação N/P/R/F/ESC e skip de revelações
 - [ ] **P0** teste 720p / 1080p / 16:10 com screenshots
 - [ ] **P0** projetor real e última fileira: texto/código legíveis
 - [ ] **P0** offline (sem CDN, mídia remota, fonte remota) e backup local
