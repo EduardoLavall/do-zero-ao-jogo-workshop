@@ -417,3 +417,18 @@ Referências: [Auditoria](./AUDITORIA-PRONTIDAO.md) · [Projeção](./PROJECAO-Q
 `6` é atalho para teste do Engine Lab, sem alterar progresso de outras salas; `E` permite revelar sem flecha e, após completar, exibe o takeaway. Scene usa apenas core, Renderer, Input e UI. A dependência de pacote Unity no texto de exemplo não exige instalar Unity.
 
 Ver `docs/ENGINE-LAB.md` (storyboard cronometrado e validações manuais pendentes).
+
+
+## Interactive Learning — novo gate de arquitetura (#37–#41)
+
+A Room 6 do PR #36 entrega diagrama e painel; isso é **visualização estática/roteirizada**, não simulação. Antes de #24/#25/#26, implementar modelos interativos modulares com consequências verificáveis.
+
+- **Core mantém responsabilidade:** `PresentationController` gerencia progresso/reveals/objetivos e não simulação física; `HotspotSystem` continua targeting; `PresentationScene` coordena apenas entrada/saída da room e demo.
+- **RoomDemoController (proposta para #38):** ciclo de vida `mount → activate → reset → destroy`; somente uma demo ativa por vez; trocar room/ESC/reset cancela listener/tween/timer.
+- **Modelos puros de demo:** `src/game/demos/models/` para acumulador de FixedUpdate, pulo, composição e regras; efeitos visuais Phaser/DOM só *observam* o estado.
+- **Registro modular:** roomId → mini-demo; fallback para salas ainda apenas com hotspots. Não codificar `if(roomId)` para todas as experiências dentro da Scene.
+- **UX do palco:** input DOM da demo não deve acionar tiro/movimento de mouse; N/P/R/ESC e skip do apresentador nunca ficam bloqueados; estado de aprendizado reinicia de forma explícita, enquanto reveals narrativos permanecem por room.
+- **DoD:** ação variável gera consequência diferente e explicável, testável via Vitest; mostrar reset, A/B, fallback e conclusão em tempo. Não contar animação pré-programada + reveal de texto como mecânica.
+- **Unity e C#** somente no conteúdo de ensino; todos simuladores são Phaser/TypeScript offline.
+
+Referência de requisitos, matriz por sala e dependências: [INTERACTIVE-LEARNING.md](./INTERACTIVE-LEARNING.md).
