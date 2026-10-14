@@ -1,6 +1,6 @@
 import type { PresentationState, RoomDefinition } from "../presentation/types";
 import { getOverlayPlacement } from "./projection";
-import { getRevealCopy, getRoomIntroduction } from "./presentationCopy";
+import { getRevealCopy, getRoomIntroduction, getRoomTakeaway } from "./presentationCopy";
 import type { PresentationCopy } from "./presentationCopy";
 
 const LOGICAL_WIDTH = 1920;
@@ -130,7 +130,7 @@ export class PresentationUI {
     state: PresentationState,
     controlEnabled: boolean,
   ): void {
-    this.roomNumber.textContent = `/ ${String(roomIndex + 1).padStart(2, "0")} DE ${String(totalRooms).padStart(2, "0")}`;
+    this.roomNumber.textContent = roomIndex < 0 ? "/ DEV TEST" : `/ ${String(roomIndex + 1).padStart(2, "0")} DE ${String(totalRooms).padStart(2, "0")}`;
     this.roomTitle.textContent = room.title.toUpperCase();
     this.roomSubtitle.textContent = getRoomIntroduction(room.id).kicker;
 
@@ -164,11 +164,15 @@ export class PresentationUI {
     this.openCopy(getRoomIntroduction(roomId));
   }
 
+  public openTakeaway(roomId: string): void {
+    this.openCopy(getRoomTakeaway(roomId));
+  }
+
   public openHelp(): void {
     this.openCopy({
       kicker: "PRESENTER MODE / AJUDA",
       title: "Você controla a apresentação",
-      body: "ENTER começa. N/P mudam de sala, R reinicia, E revela o próximo alvo disponível sem atirar, ESC fecha o painel, F alterna tela cheia e H abre esta ajuda. Mouse: esquerda atira, direita pula, meio alterna o controle.",
+      body: "ENTER começa. N/P mudam de sala, R reinicia, E revela o próximo alvo disponível sem atirar, ESC fecha o painel, F alterna tela cheia e H abre esta ajuda. T abre/fecha o laboratório de testes. Mouse: esquerda atira, direita pula, meio alterna o controle.",
     });
   }
 
