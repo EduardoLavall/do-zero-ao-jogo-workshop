@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { getEntryX, resolveRoomExit } from "../systems/RoomTransition";
+import { EXIT_ZONE_WIDTH, getEntryX, resolveRoomExit } from "../systems/RoomTransition";
 
 describe("fixed Slide Room transitions", () => {
   it("resolves the left exit zone as previous", () => {
-    expect(resolveRoomExit(50, 1920)).toBe("previous");
+    expect(resolveRoomExit(EXIT_ZONE_WIDTH, 1920)).toBe("previous");
   });
 
   it("resolves the right exit zone as next", () => {
-    expect(resolveRoomExit(1870, 1920)).toBe("next");
+    expect(resolveRoomExit(1920 - EXIT_ZONE_WIDTH, 1920)).toBe("next");
   });
 
   it("returns no transition while player is inside the room", () => {
