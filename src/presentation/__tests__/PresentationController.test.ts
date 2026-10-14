@@ -10,6 +10,28 @@ describe("PresentationController", () => {
     expect(controller.getCurrentRoom().title).toBe("Room 01");
   });
 
+  it("starts exactly once and preserves started across room changes and reset", () => {
+    const controller = new PresentationController();
+    const listener = vi.fn();
+    controller.subscribe(listener);
+
+    expect(controller.getState().started).toBe(false);
+    expect(controller.start()).toBe(true);
+    expect(controller.start()).toBe(false);
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(listener).toHaveBeenCalledWith({
+      type: "presentation:started",
+      roomId: "room-01",
+    });
+
+    controller.nextRoom();
+    expect(controller.getState().started).toBe(true);
+    controller.resetRoom();
+    expect(controller.getState().started).toBe(true);
+    controller.previousRoom();
+    expect(controller.getState().started).toBe(true);
+  });
+
   it("navigates to the next and previous rooms", () => {
     const controller = new PresentationController();
 
