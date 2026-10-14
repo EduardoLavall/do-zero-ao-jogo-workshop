@@ -14,7 +14,7 @@
 - [x] #8: UI de apresentação inicial com menu, HUD, painel DOM, atalhos e fallback de reveal (pendente smoke visual em projetor).
 - [ ] #23: validação em projetor real e screenshots das três resoluções; geometria e tipografia inicial implementadas.
 - [x] #27: 11 storyboards executáveis com metas de tempo, painel, hotspots, props e presenter cue.
-- [ ] #9: Room 6 como vertical slice artística/didática acabada.
+- [x] #9: Room 6 vertical slice funcional de Phaser + Core + DOM, seis terminais, diagramas, código Unity/C# e completion (arte/SFX/projetor ainda pendentes nas #24/#25/#26/#23).
 
 **Não confundir infraestrutura implementada com slides concluídos:** registry agora contém 11 rooms autoradas como placeholders com painéis, hotspots e falas-guia; arte, efeitos e polimento de conteúdo ainda estão pendentes.
 
@@ -96,3 +96,10 @@ A base UI foi implementada no PR da issue #8: camada DOM proporcional ao canvas,
 Os 11 storyboards estão centralizados em `src/rooms/workshopRooms.ts`, conectados a `roomRegistry`, `PresentationUI` e `RoomRenderer`. Contém roteiro, composições provisórias, narrativa, conteúdo de reveals, assets planejados e objetivos. O `PresentationController` guarda progresso por sala durante a sessão e o reset R atua somente na sala atual. O menu (20s) + salas (790s) = 13:30, com 90s reservados para contingência. Veja [STORYBOARDS.md](./STORYBOARDS.md).
 
 **Gate atual:** validar a versão em browser e trabalhar #9 na Room 6; ainda faltam assets/audio reais, verificação de fontes, revisão didática e ensaio físico.
+
+## Entrega da Room 6 (#9) — 2026-10-14
+
+- Seis terminais ENGINE LAB, game loop/lifecycle/fixed update/componentes/input/física, painéis de código+diagrama e porta de progresso.
+- Alternância entre flecha e fallback E; tecla 6 para quick jump; P/N para troca, R para reset; tempo de palco planejado em 2min45s.
+- Diagrama e código em DOM, placeholders Phaser sem download; impressão de Unity/C# **somente didática**.
+- Detalhes, roteiro e QA em [ENGINE-LAB.md](./ENGINE-LAB.md). O gate de *assets finais*, *SFX*, *efeitos juicy* e *projetor real* permanece aberto; não confundir vertical slice funcional com release G2 totalmente polido.
