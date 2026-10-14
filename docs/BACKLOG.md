@@ -94,10 +94,10 @@ Legenda:
 
 ## Storyboard e arquitetura de conteúdo (#27)
 
-- [ ] **P0** roteiro por room com objetivo didático, fala, duração, revelações e fallback
-- [ ] **P0** separar room renderer e conteúdo de `PresentationScene`
-- [ ] **P0** progress/reveal persistidos por sala conforme política explicitada
-- [ ] **P0** ensaio-alvo: 13:30 + 1:30 de contingência
+- [x] **P0** roteiro por room com objetivo didático, fala, duração, revelações e fallback (11 storyboards)
+- [x] **P0** separar room renderer e conteúdo de `PresentationScene` (placeholders via RoomWorldRenderer)
+- [x] **P0** progress/reveal persistidos por sala conforme política explicitada (sessão atual; R só sala ativa)
+- [x] **P0** roteiro-alvo: 13:30 + 1:30 de contingência (teste automatizado; ensaio real pendente)
 
 ## Vertical Slice (#9)
 
