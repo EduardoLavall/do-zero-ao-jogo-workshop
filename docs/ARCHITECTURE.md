@@ -432,3 +432,9 @@ A Room 6 do PR #36 entrega diagrama e painel; isso é **visualização estática
 - **Unity e C#** somente no conteúdo de ensino; todos simuladores são Phaser/TypeScript offline.
 
 Referência de requisitos, matriz por sala e dependências: [INTERACTIVE-LEARNING.md](./INTERACTIVE-LEARNING.md).
+
+## Implementação Interactive Core #38
+
+`src/game/demos/RoomDemoController.ts` contém contrato e ciclo de vida de demos, independente de Phaser. `src/game/demos/demoRegistry.ts` seleciona implementação por sala; apenas `room-06` usa `InputTraceDemo` no piloto. `InputTraceModel` traduz comandos MOVER/PULAR em estado determinístico. A Scene não conhece detalhes de qualquer simulação e usa apenas controller/ciclo de vida. A `PresentationUI` provê DOM escalonado sobre o canvas, com foco de teclado e pause do player. Eventos do Phaser e dados narrativos permanecem no próprio módulo. `update(deltaMs)` limita delta a 50ms para evitar quedas bruscas, e `dispose()` remove recursos ao fechar/navegar/resetar/shutdown.
+
+Detalhes, limite do escopo e checklist manual em [INTERACTIVE-CORE.md](./INTERACTIVE-CORE.md). #39/#40 ainda construirão os modelos didáticos completos.
