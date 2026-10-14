@@ -407,3 +407,13 @@ Referências: [Auditoria](./AUDITORIA-PRONTIDAO.md) · [Projeção](./PROJECAO-Q
 - O prefixo dos IDs dos hotspots/reveals é a room (ex. `room-06-game-loop`). Validação automatizada impede dependências cíclicas sem saída e orçamento fora de 13:30 + 1:30.
 - Cuidados: duração é meta de roteiro, **não** cronômetro forçando transições; a fala-guia não deve ser exibida à plateia. Arquivos em `plannedAssets` são IDs **planejados**, sem fetch em runtime. [STORYBOARDS.md](./STORYBOARDS.md).
 
+
+## #9 — Room 6 Engine Lab
+
+`RoomRenderer` delega a temática de programação a `src/game/systems/EngineRoomVisuals.ts`. Isso mantém `PresentationScene` sem detalhamento de cenário. O renderer usa somente Phaser geometry para prototipar terminais, estado READY/LOCK/ONLINE e saída habilitada por `completedObjectives`.
+
+`src/ui/EngineLessonDiagram.ts` contém um mapa de diagramas didáticos para os seis reveals e preenche o DOM somente por `textContent`; a UI usa CSS específico para texto/código em projetor e ativa a apresentação temática por `revealId`. As outras salas mantêm o visual simples e os painéis existentes.
+
+`6` é atalho para teste do Engine Lab, sem alterar progresso de outras salas; `E` permite revelar sem flecha e, após completar, exibe o takeaway. Scene usa apenas core, Renderer, Input e UI. A dependência de pacote Unity no texto de exemplo não exige instalar Unity.
+
+Ver `docs/ENGINE-LAB.md` (storyboard cronometrado e validações manuais pendentes).

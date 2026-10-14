@@ -585,7 +585,8 @@ export const workshopRooms = [
         "content": {
           "kicker": "ROOM-06 / 04",
           "title": "Compor em vez de monólito",
-          "body": "GameObject combina Transform, SpriteRenderer, Rigidbody2D, Collider2D e scripts. Cada parte tem responsabilidade."
+          "body": "GameObject combina Transform, SpriteRenderer, Rigidbody2D, Collider2D e scripts. Cada parte tem responsabilidade.",
+          "code": "var rb = GetComponent<Rigidbody2D>();\n// Cada componente tem sua função."
         }
       },
       {
@@ -598,7 +599,8 @@ export const workshopRooms = [
         "content": {
           "kicker": "ROOM-06 / 05",
           "title": "De onde vem o comando?",
-          "body": "O dispositivo gera eventos; o runtime os processa. Podemos consultar estados por frame ou reagir a callbacks de Input Actions."
+          "body": "O dispositivo gera eventos; o runtime os processa. Podemos consultar estados por frame ou reagir a callbacks de Input Actions.",
+          "code": "using UnityEngine.InputSystem;\n\nif (Keyboard.current.spaceKey.wasPressedThisFrame) {\n  RequestJump();\n}"
         }
       },
       {

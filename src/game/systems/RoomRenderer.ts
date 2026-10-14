@@ -7,6 +7,7 @@ import type {
   StageProp,
 } from "../../presentation/types";
 import { getHotspotState } from "./HotspotSystem";
+import { renderEngineRoom } from "./EngineRoomVisuals";
 
 /**
  * Owns the placeholder room world. Gameplay coordinates and room text live in
@@ -30,7 +31,10 @@ export class RoomRenderer {
     const accent = visual?.accentColor ?? 0x8be9fd;
     this.backdrop.setFillStyle(visual?.backgroundColor ?? 0x0b1020);
 
-    if (visual) {
+    const themedObjects = renderEngineRoom(this.scene, room, state);
+    if (themedObjects.length > 0) {
+      this.decorations.push(...themedObjects);
+    } else if (visual) {
       for (const prop of visual.props) {
         this.renderProp(prop, accent);
       }

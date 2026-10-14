@@ -137,3 +137,11 @@ No GitHub:
 `Settings → Pages → Build and deployment → Source → GitHub Actions`
 
 Observação: enquanto o repositório não possuir `package-lock.json`, o workflow usa `npm install`. Quando o lockfile for versionado, deve-se preferir `npm ci`.
+
+## Room 6 — Engine Lab (vertical slice #9)
+
+Pressione Enter, feche o painel inicial e use **6** para abrir diretamente a Room 6. Ela contém seis terminais de programação com diagramas didáticos de Unity/C#, código em painéis HTML, dependências de reveal, feedback visual e objetivo ROOM COMPLETE. **Unity não está instalado nem é usado como runtime**: o jogo continua em Phaser/TypeScript.
+
+Use E para revelar sem flecha, N/P para navegar, R para resetar e ESC para fechar painéis. Quando todos os seis terminais estiverem revelados, E mostra a síntese da sala. Consulte [docs/ENGINE-LAB.md](./docs/ENGINE-LAB.md).
+
+Arte final, SFX e teste físico de projetor ainda dependem de #24/#25/#26/#23.

@@ -28,3 +28,12 @@ export function getRevealCopy(revealId: RevealId): PresentationCopy {
     body: "Este alvo não possui um painel didático associado.",
   };
 }
+
+export function getRoomTakeaway(roomId: RoomId): PresentationCopy {
+  const room = getRoomById(roomId);
+  return {
+    kicker: "ROOM COMPLETE / APRENDIZADO",
+    title: room?.storyboard.thesis ?? "Sala concluída",
+    body: room?.storyboard.takeaway ?? "Avance com N.",
+  };
+}
