@@ -25,6 +25,14 @@ A história dos jogos entra apenas como contexto. O foco principal é **como jog
 
 ---
 
+## 1.1. Complemento decisivo — slides jogáveis precisam ensinar por experimentação
+
+A versão técnica de 2026-10-14 implementou 11 storyboards e a Room 6 com terminais, código e diagramas, mas ainda oferece majoritariamente **click → reveal de texto**. **Isso é base de apresentação, não o resultado pretendido.** O workshop precisa de pelo menos uma demonstração exclusiva em cada uma das 11 salas, com escolha/parâmetro → estado alterado → consequência visível → explicação.
+
+Aplicar o gate **Interactive Learning** do [plano de experiências](./INTERACTIVE-LEARNING.md) e das issues #37–#41 **antes de encerrar como prontas as salas e antes do polimento juicy**. Priorizar o simulador de Game Loop/FixedUpdate e o laboratório de Componentes/Input/Rigidbody2D da Room 6. O projeto continua em Phaser/TypeScript; Unity/C# permanecem exemplos de código de aula, nunca runtime exigido.
+
+---
+
 # 2. Conceito — Slide Rooms
 
 > **Slide Rooms são salas temáticas interativas que substituem slides tradicionais por espaços navegáveis, onde o conteúdo da apresentação faz parte do cenário e é revelado através das ações do personagem.**

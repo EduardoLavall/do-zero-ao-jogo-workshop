@@ -1,6 +1,12 @@
 # Storyboards de produção — Do Zero ao Jogo
 
-> Issue #27 · dados implementados em `src/rooms/workshopRooms.ts` · **roteiro inicial sujeito a ensaio**, não conteúdo artístico final. Este documento é derivado das mesmas definições do jogo.
+> Issue #27 · **nível S1: estrutura e conteúdo, não interações didáticas completas** · dados implementados em `src/rooms/workshopRooms.ts` · **roteiro inicial sujeito a ensaio**, não conteúdo artístico final. Este documento é derivado das mesmas definições do jogo.
+
+## Nova etapa — Interactive Learning (#37)
+
+Cada sala abaixo contém **copy e hotspots**; para ser considerada jogável, deverá ter uma ação do apresentador que altere um modelo de estado e produza uma consequência observável/comparável. O inventário das **11 mecânicas planejadas** está em [INTERACTIVE-LEARNING.md](./INTERACTIVE-LEARNING.md). Esta etapa é **pendente**, começando pelo core #38 e pelas simulações da Room 6 #39/#40. As demais salas são implementadas nos pacotes #28/#29/#30. Juiciness/arte/som vêm depois.
+
+**Não confundir "Principal ponto de interação" na tabela abaixo com demo já implementada**: hoje são hotspots de revelação de texto.
 
 ## Contrato e operação
 
