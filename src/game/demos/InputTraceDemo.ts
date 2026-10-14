@@ -70,7 +70,7 @@ export class InputTraceDemo implements RoomDemo {
     this.render();
   }
 
-  public update(_deltaMs: number): void {
+  public update(): void {
     // Intentionally no timer: the first demo proves event/state/lifecycle without a loop.
   }
 
