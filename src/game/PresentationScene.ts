@@ -46,6 +46,7 @@ export class PresentationScene extends Phaser.Scene {
   private fullscreenKey?: Phaser.Input.Keyboard.Key;
   private revealKey?: Phaser.Input.Keyboard.Key;
   private helpKey?: Phaser.Input.Keyboard.Key;
+  private roomSixKey?: Phaser.Input.Keyboard.Key;
   private transitionLocked = false;
   private blockedExitDirection: Exclude<RoomExitDirection, null> | null = null;
   private lastControlEnabled = true;
@@ -110,6 +111,7 @@ export class PresentationScene extends Phaser.Scene {
       this.fullscreenKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
       this.revealKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
       this.helpKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
+      this.roomSixKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX);
     }
 
     const root = document.getElementById("game-root");
@@ -216,6 +218,19 @@ export class PresentationScene extends Phaser.Scene {
       return;
     }
 
+    if (this.roomSixKey && Phaser.Input.Keyboard.JustDown(this.roomSixKey)) {
+      if (this.presentationController.getState().roomId !== "room-06") {
+        this.clearProjectiles();
+        this.ui?.closePanel();
+        this.presentationController.enterRoom("room-06");
+        this.player?.setPosition(ENTRY_OFFSET, getPlayerStartY());
+        this.blockedExitDirection = null;
+        this.updateRoomVisuals();
+        this.ui?.openIntroduction("room-06");
+      }
+      return;
+    }
+
     if (this.nextKey && Phaser.Input.Keyboard.JustDown(this.nextKey)) {
       this.requestRoomTransition("next");
       return;
@@ -260,7 +275,7 @@ export class PresentationScene extends Phaser.Scene {
       this.createImpact(hotspot.x, hotspot.y);
       this.revealHotspot(hotspot);
     } else {
-      this.ui?.openIntroduction(room.id);
+      this.ui?.openTakeaway(room.id);
     }
   }
 
@@ -380,6 +395,9 @@ export class PresentationScene extends Phaser.Scene {
     );
     this.refreshHud();
     this.ui?.openReveal(hotspot.revealId);
+    if (this.presentationController.getCurrentRoom().objectives.every((objective) => this.presentationController.getState().completedObjectives.has(objective.id))) {
+      this.ui?.showToast("ENGINE ONLINE · ROOM COMPLETE · N PARA AVANÇAR");
+    }
   }
 
   private createImpact(x: number, y: number): void {
