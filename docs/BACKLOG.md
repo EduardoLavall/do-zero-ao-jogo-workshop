@@ -101,14 +101,14 @@ Legenda:
 
 ## Vertical Slice (#9)
 
-- [ ] **P1** Room Programação placeholder
-- [ ] **P1** Game Loop reveal
-- [ ] **P1** MonoBehaviour lifecycle reveal
-- [ ] **P1** Components diagram
-- [ ] **P1** Rigidbody2D reveal
-- [ ] **P1** engine internals reveal
-- [ ] **P2** code syntax styling
-- [ ] **P2** unlock line animations
+- [x] **P1** Room Programação placeholder temático (seis terminais)
+- [x] **P1** Game Loop reveal + diagrama
+- [x] **P1** MonoBehaviour lifecycle reveal + código
+- [x] **P1** Components diagram
+- [x] **P1** Rigidbody2D reveal com dependências
+- [x] **P1** engine internals / Input System e FixedUpdate
+- [ ] **P2** code syntax highlighting avançado (base monoespaçada legível entregue)
+- [x] **P2** unlock visuals/portão ONLINE e transição de diagramas (FX completos #24)
 
 ## Juiciness / Game Feel (#24)
 
