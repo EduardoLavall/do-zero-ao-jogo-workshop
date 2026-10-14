@@ -24,21 +24,24 @@
 |---|---|---|---|---|
 | 1 | **Projeção + UX de apresentação** | #23, #8 | tipografia legível em 720p/1080p, conteúdo DOM, menu Enter, HUD/overlay, fullscreen F, N/P/R, modo sem mouse | P0 |
 | 2 | **Roteiro e estrutura data-driven** | #27 | 11 storyboards, data schema, presenter cues, reveal persistence decidida, orçamento 13:30+1:30 | P0 |
-| 3 | **Vertical slice didática** | #9 | Room 6 com Game Loop, Unity/MonoBehaviour, Rigidbody2D, código+diagrama+efeito; apresentação completa com placeholders | P0 |
-| 4 | **Juicy baseline** | #24 | hover, pose/tiro, trail, hit, particles, reveal, objective complete, transições com reduced-motion | P1 |
-| 5 | **Sprite kit piloto** | #25 | style bible, spritesheet player, props/hotspots/UI e fundo modular da Room 6, assets locais e manifest | P1 |
-| 6 | **SFX e ambiente de palco** | #26 | eventos mapeados a SFX próprios/CC0, audio buses, autoplay unlock, mute, mix sob voz e licença documentada | P1 |
-| 7 | **Produção de conteúdo — onda A** | #28 | Rooms 1–4 (conceito, história, tecnologia, hub) | P1 |
-| 8 | **Produção de conteúdo — onda B** | #29 | Rooms 5, 7, 8 (design, arte, áudio); Room 6 é #9 | P1 |
-| 9 | **Produção de conteúdo — onda C** | #30 | Rooms 9, 10 e Final/Q&A; clímax do pulo demonstrado | P1 |
-| 10 | **Tuning do apresentador + release** | #20 Fase 2, #31 | painel F2, presets, estabilidade, ensaio, offline, backup, performance e QA de projeção | P0 para #31 |
+| 3 | **Base didática de Room 6** | #9 | seis terminais, diagramas e código Unity/C# como referência; **entregue como conteúdo, não como simulação** | S1 entregue |
+| 4 | **Interactive Core (novo)** | #37, #38 | contrato de demos, estado, inputs/controles, reset, lifecycle e fallback seguros | **P0, AGORA** |
+| 5 | **Room 6 realmente interativa** | #39, #40 (+ #9) | Game Loop com play/pause/step/FPS, componentes ligáveis e laboratório de impulso/colisão | **P0** |
+| 6 | **Produção jogável — onda A** | #28 | Rooms 1–4: regras, Pong mínimo, modelo de hardware e quatro pilares ligados/desligados | P0 |
+| 7 | **Produção jogável — onda B** | #29 | Rooms 5, 7 e 8: balanceamento/core loop, spritesheet em movimento e áudio A/B | P0 |
+| 8 | **Produção jogável — onda C** | #30 | Rooms 9, 10 e Final: pulo parametrizado, camadas do protótipo e Q&A interativo | P0 |
+| 9 | **Juicy baseline** | #24 | antecipação, impacto, partículas, trail e reveal para **interações já funcionais** | P1 |
+| 10 | **Sprite kit piloto** | #25 | personagem, terminais, props e UI da Room 6, com asset manifest e origem/licença | P1 |
+| 11 | **SFX e ambiente** | #26 | áudio A/B funcional da Room 8, SFX, mix e fallback mudo | P1 |
+| 12 | **Validação pedagógica e release** | #41, #23, #20 Fase 2, #31 | 11/11 demos, tests, projetor, offline, ensaio <=15 min e F2 | **P0 release** |
 
 ### Dependências
 
-- Gate 1 + definição inicial do Gate 2 antes de produzir arte final.
-- Gate 3 serve de gold standard. Gates 4/5/6 podem evoluir em paralelo **sobre uma única Room 6**.
-- Gates 7/8/9 iniciam depois da aprovação da vertical slice, style bible e UI.
-- Gate 10 inclui testes contínuos durante toda a produção; não deixar verificação em projetor só para a véspera.
+- **S0/S1 não significam slide jogável:** #27 definiu conteúdo, #9 desenhou terminais e diagramas, mas ainda faltam modelos manipuláveis.
+- **#38 → #39 → #40** é a trilha crítica. A Room 6 é o primeiro *gold standard interativo* quando os simuladores exibirem consequências variáveis (IL2).
+- **#28/#29/#30** usam o mesmo contrato para as outras salas. Uma mecânica relevante por room, não seis minijogos obrigatórios.
+- **#24/#25/#26** polirão as demos aprovadas; a Room 8 precisará do áudio #26 para teste A/B sonoro real.
+- **#41/#23/#31** verificam o todo durante a produção; incluir projeção e ensaios frequentes, não só na véspera.
 
 ## Roteiro de 15 minutos
 
@@ -62,15 +65,28 @@
 
 Regra de corte: manter a explicação técnica (Game Loop / pulo) e diminuir história/efeitos se o ensaio passar de 15 minutos. Não inserir mini-jogos, física obrigatória, menus complexos ou quizzes que possam travar a fala.
 
+## Critério de qualidade: uma sala só conta como "jogável" se
+
+1. O apresentador puder **mudar** ao menos uma escolha/variável ou acionar simulação real;
+2. o **estado e o resultado** reagirem de maneira diferente entre duas configurações comparáveis;
+3. houver **takeaway didático** conectando input e consequência;
+4. a experiência for **resetável e pulável** sem mouse/áudio, em poucos segundos;
+5. o código for testado e o modelo não depender de Unity instalado;
+6. o roteiro continuar dentro de **13:30 de conteúdo + 1:30 de contingência**.
+
+Mapa por sala: [Interactive Learning](./INTERACTIVE-LEARNING.md). Épico **#37**, QA **#41**.
+
 ## Quality gates obrigatórios
 
 **G0 — protótipo técnico** (atingido, com testes manuais limitados): duas salas, player, hotspots, flechas e estado.
 
 **G1 — apresentação funcional**: menu, conteúdos DOM, N/P/R/F/ESC, objetivos, progressão acessível sem controle mouse, 720p/1080p.
 
-**G2 — vertical slice juicy**: uma room completa com sprites, SFX, impacto, reveal, narrativa e opção mute/reduced-motion.
+**G2A — vertical slice INTERATIVA (novo bloqueio)**: Room 6 com simulações manipuláveis, passo único de frame, física, componentes, comparação A/B e fallback, antes de sprites/SFX.
 
-**G3 — conteúdo completo**: 11 cenas, cada uma com tese, uma interação central, fallback, speaker cue e tempo cronometrado.
+**G2B — vertical slice juicy**: demo da Room 6 com sprites, SFX, impacto, reveal, narrativa e opção mute/reduced-motion.
+
+**G3 — conteúdo JOGÁVEL completo**: 11 cenas, cada uma com tese, **mecânica realmente executável com mudança de estado e resultado**, fallback, speaker cue e tempo cronometrado.
 
 **G4 — release show-ready**: CI + build offline, projector last-row pass, consumo de memória/frames aceitável, stress/perda de foco, backup local e ensaio <=15 min.
 
@@ -85,7 +101,7 @@ Regra de corte: manter a explicação técnica (Game Loop / pulo) e diminuir his
 
 ## Próxima issue executável
 
-**#9 — vertical slice da Room 6** (com #23: inspeção de legibilidade em projetor): usar as cenas autoradas da #27 como base, implementar explicações técnicas e diagramas visualmente ricos.
+**#38 — contrato de demo por sala**, depois **#39 e #40** (Room 6 executável) com #23 (projeção). **Não partir para #24 como próximo passo** só porque #9 implementou diagramas.
 
 ## Atualização de implementação — #8 / #23 (2026-10-14)
 
@@ -103,3 +119,17 @@ Os 11 storyboards estão centralizados em `src/rooms/workshopRooms.ts`, conectad
 - Alternância entre flecha e fallback E; tecla 6 para quick jump; P/N para troca, R para reset; tempo de palco planejado em 2min45s.
 - Diagrama e código em DOM, placeholders Phaser sem download; impressão de Unity/C# **somente didática**.
 - Detalhes, roteiro e QA em [ENGINE-LAB.md](./ENGINE-LAB.md). O gate de *assets finais*, *SFX*, *efeitos juicy* e *projetor real* permanece aberto; não confundir vertical slice funcional com release G2 totalmente polido.
+
+## Correção estratégica — 2026-10-14: Interactive Learning (#37)
+
+O produto estava sendo tratado como pronto para polish embora quase todas as rooms seguissem `hotspot → texto`. A auditoria mostrou que **interação mecânica ≠ interação didática**. Mantemos os 11 storyboards e a Room 6 como conteúdo/base, mas a transição para arte e juice fica condicionada ao **IL2** (Room 6 manipulável) e a expansão ao **IL3** (11 rooms com ao menos uma experiência própria).
+
+- **Agora:** #38 — estrutura modular de demonstrações. Sem frameworks extras e sem duplicar `PresentationController`.
+- **Depois:** #39 (frames/FixedUpdate) e #40 (Componentes/Input/Rigidbody2D).
+- **Em seguida:** #28/#29/#30, aproveitando stories/tempos atuais.
+- **Então:** #24/#25/#26; áudio da Room 8 exige #26 para A/B real.
+- **Validação:** #41 com QA por sala, depois #23/#31.
+
+O plano completo de ações, variáveis e resultados das **11 salas** está em [docs/INTERACTIVE-LEARNING.md](./INTERACTIVE-LEARNING.md). Issues [#37](https://github.com/EduardoLavall/do-zero-ao-jogo-workshop/issues/37)–[#41](https://github.com/EduardoLavall/do-zero-ao-jogo-workshop/issues/41).
+
+**Estado:** documentação e tarefas criadas; **as novas simulações não estão implementadas nesta PR**.
