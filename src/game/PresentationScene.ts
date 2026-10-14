@@ -283,7 +283,7 @@ export class PresentationScene extends Phaser.Scene {
       this.createImpact(hotspot.x, hotspot.y);
       this.revealHotspot(hotspot);
     } else {
-      this.ui?.openIntroduction(room.id);
+      this.ui?.openTakeaway(room.id);
     }
   }
 
