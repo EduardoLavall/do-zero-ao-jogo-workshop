@@ -1092,24 +1092,32 @@ PRESS ENTER FOR Q&A
 
 ---
 
-# 38. Timing aproximado
+# 38. Timing revisado para apresentação real
 
-| Room | Tempo |
+A distribuição antiga consumia 15:00 completos **sem margem para imprevistos**. Novo alvo: **13:30 de conteúdo + 1:30 de contingência = 15:00**.
+
+| Room | Tempo-alvo |
 |---|---:|
 | Menu | 0:20 |
 | Room 1 | 0:50 |
-| Room 2 | 1:20 |
-| Room 3 | 0:50 |
+| Room 2 | 1:00 |
+| Room 3 | 0:45 |
 | Room 4 | 0:40 |
-| Room 5 | 2:00 |
-| Room 6 | 2:20 |
+| Room 5 | 1:45 |
+| Room 6 | 2:45 |
 | Room 7 | 0:50 |
 | Room 8 | 0:50 |
-| Room 9 | 3:00 |
-| Room 10 | 1:20 |
-| Final | 0:40 |
+| Room 9 | 2:15 |
+| Room 10 | 1:05 |
+| Final | 0:25 |
+| **Total de conteúdo** | **13:30** |
+| **Reserva de contingência** | **1:30** |
 
-Total alvo: **~15 min**.
+Prioridade se atrasar: preservar Game Loop e demonstração do pulo; cortar exemplos secundários/história ou pular animações. O palestrante nunca fica preso a acertar alvos antes de avançar.
+
+### Contrato didático de cada room
+
+Cada sala deve conter: (1) pergunta/tese central; (2) uma ação/reveal mais importante; (3) efeito visual/sonoro que ensina causalidade; (4) explicação e exemplo legíveis; (5) takeaway final; (6) duração / presenter cue; (7) fallback completo sem mouse. Detalhar no storyboard #27.
 
 ---
 
@@ -1128,7 +1136,7 @@ A câmera não acompanha o player. Quando ele cruza uma exit zone lateral, o Pre
 
 Esse modelo prioriza composição previsível, legibilidade em projetor e comportamento de “slide jogável”. O layout é desenhado em coordenadas lógicas 1920×1080 e escalado com `Phaser.Scale.FIT`, evitando layout percentual solto para elementos de gameplay.
 
-Usar uma safe area interna para conteúdo essencial, deixando margem visual nas bordas para HUD, exits e variações de viewport.
+Usar safe area interna para conteúdo essencial, deixando margem visual nas bordas para HUD, exits e variações de viewport. A safe area de conteúdo (aprox. 96px laterais em 1920 de largura; validar) é distinta da exit zone de 22px e da borda decorativa atual de 29px: **não criar faixas laterais grandes**. Referência de tipografia para 720p: títulos >=48px lógicos, corpo >=30px, código >=30–34px, legendas indispensáveis >=24px; validar em projetor real. Conteúdo HTML deve escalar alinhado ao canvas Phaser com letterbox correto.
 
 Recomendação:
 
@@ -1168,6 +1176,14 @@ Recomendação:
 - Unity + C# são a referência técnica principal;
 - outras engines entram apenas como comparações rápidas;
 - a apresentação deve funcionar offline.
+
+---
+
+# 40.1. Qualidade sensorial (juiciness)
+
+Cada interação aplica a sequência **antecipação → ação → impacto → recompensa → conteúdo didático**. O impacto não pode mascarar a mensagem ou a voz. Dar preferência a animação de tiro, trilha da flecha, brilho, partículas curtas, SFX baixo, entrada do painel em blocos e feedback de objetivo. O sistema deve possuir FX mínimo e mute, ser seguro em hardware fraco e não depender de serviços externos.
+
+Sprite/áudio são produzidos a partir de uma skin piloto da Room 6 (#25/#26), com licença registrada. Consultar [Produção de arte e som](./ART-AUDIO-PRODUCTION.md), [Projeção](./PROJECAO-QA.md) e [Auditoria](./AUDITORIA-PRONTIDAO.md).
 
 ---
 
