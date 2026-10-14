@@ -1,4 +1,5 @@
 import type { PresentationState, RoomDefinition } from "../presentation/types";
+import { getOverlayPlacement } from "./projection";
 import { getRevealCopy, getRoomIntroduction } from "./presentationCopy";
 import type { PresentationCopy } from "./presentationCopy";
 
@@ -106,9 +107,10 @@ export class PresentationUI {
     const canvasRect = canvas.getBoundingClientRect();
     const rootRect = this.root.getBoundingClientRect();
 
-    this.layer.style.left = `${canvasRect.left - rootRect.left}px`;
-    this.layer.style.top = `${canvasRect.top - rootRect.top}px`;
-    this.layer.style.transform = `scale(${canvasRect.width / LOGICAL_WIDTH}, ${canvasRect.height / LOGICAL_HEIGHT})`;
+    const placement = getOverlayPlacement(canvasRect, rootRect, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+    this.layer.style.left = `${placement.left}px`;
+    this.layer.style.top = `${placement.top}px`;
+    this.layer.style.transform = `scale(${placement.scaleX}, ${placement.scaleY})`;
   }
 
   public setStarted(started: boolean): void {
