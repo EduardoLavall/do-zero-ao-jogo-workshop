@@ -68,6 +68,7 @@ export interface RoomStoryboard {
   reveals: readonly RoomRevealDefinition[];
   assets: readonly string[];
   audio: readonly string[];
+  sources: readonly string[];
   transition: { prompt: string; mode: "walk" | "presenter" | "final" };
   fallback: { revealKey: "E"; nextKey: "N"; previousKey: "P"; resetKey: "R" };
   productionStatus: "storyboard" | "vertical-slice" | "final";
