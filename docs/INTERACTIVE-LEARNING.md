@@ -107,7 +107,7 @@ Um círculo clicável que abre texto **não é uma interação didática**. Um b
 
 **IL0 — Spec:** documento e issues definidos (não é implementação).
 
-**IL1 — Infra:** contrato de demos e testes de ciclo de vida implementados (#38).
+**IL1 — Infra:** contrato de demos e testes de ciclo de vida implementados (#38; pendente aprovação de smoke visual real). Piloto de input/estado na Room 6 disponível via D; não substitui #39/#40.
 
 **IL2 — Vertical slice pedagógica:** #39 + #40; Room 6 completa com **ação variável → consequência comparável → explicação**, sem obrigar minigame.
 
@@ -128,3 +128,9 @@ Um círculo clicável que abre texto **não é uma interação didática**. Um b
 - Conteúdo das outras salas: #28 / #29 / #30
 - Juice/arte/áudio: #24 / #25 / #26
 - Projeção/release: #23 / #31
+
+## Atualização após #38 — pipeline integrado
+
+A infraestrutura `RoomDemoController` e a primeira demo `InputTraceDemo` agora existem em `src/game/demos/`. `D` abre o laboratório de Input/Estado/Resultado na Room 6, os botões MOVER/PULAR alteram o modelo de verdade, ESC fecha e E/N/P/R continuam como fallback. O piloto valida troca de estado e ciclo de vida, **não faz simulação de FPS/FixedUpdate ou Rigidbody2D**; essas continuam #39/#40.
+
+Ver [INTERACTIVE-CORE.md](./INTERACTIVE-CORE.md) para interfaces e testes.
