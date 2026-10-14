@@ -101,7 +101,7 @@ Mapa por sala: [Interactive Learning](./INTERACTIVE-LEARNING.md). Épico **#37**
 
 ## Próxima issue executável
 
-**#38 — contrato de demo por sala**, depois **#39 e #40** (Room 6 executável) com #23 (projeção). **Não partir para #24 como próximo passo** só porque #9 implementou diagramas.
+**#38 — contrato de demo por sala (base implementada)**, depois **#39 e #40** (Room 6 executável) com #23 (projeção). **Não partir para #24 como próximo passo** só porque #9 implementou diagramas.
 
 ## Atualização de implementação — #8 / #23 (2026-10-14)
 
@@ -133,3 +133,7 @@ O produto estava sendo tratado como pronto para polish embora quase todas as roo
 O plano completo de ações, variáveis e resultados das **11 salas** está em [docs/INTERACTIVE-LEARNING.md](./INTERACTIVE-LEARNING.md). Issues [#37](https://github.com/EduardoLavall/do-zero-ao-jogo-workshop/issues/37)–[#41](https://github.com/EduardoLavall/do-zero-ao-jogo-workshop/issues/41).
 
 **Estado:** documentação e tarefas criadas; **as novas simulações não estão implementadas nesta PR**.
+
+## Entrega técnica #38 — RoomDemoController (2026-10-14)
+
+Implementado contrato `mount/activate/update/reset/dispose` com registry por ID, isolamento de estado, overlay DOM com controles e fallback **D** (abrir/fechar), **ESC** (sair), **E** (skip/reveal) e **N/P/R** seguros. O piloto em `room-06` permite MOVER/PULAR e compara estados do mesmo modelo puro. **Isso valida a infraestrutura, não implementa ainda FPS/FixedUpdate ou física de #39/#40.** Ver [INTERACTIVE-CORE.md](./INTERACTIVE-CORE.md).
