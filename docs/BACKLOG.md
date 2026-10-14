@@ -99,7 +99,7 @@ Legenda:
 - [x] **P0** progress/reveal persistidos por sala conforme política explicitada
 - [x] **P0** ensaio-alvo: 13:30 + 1:30 de contingência (planejamento, ensaio real pendente)
 
-## Vertical Slice (#9)
+## Vertical Slice de conteúdo (#9 — S1 entregue, S2 ainda pendente)
 
 - [x] **P1** Room Programação placeholder temático (seis terminais)
 - [x] **P1** Game Loop reveal + diagrama
@@ -110,7 +110,27 @@ Legenda:
 - [ ] **P2** code syntax highlighting avançado (base monoespaçada legível entregue)
 - [x] **P2** unlock visuals/portão ONLINE e transição de diagramas (FX completos #24)
 
-## Juiciness / Game Feel (#24)
+## Interactive Learning / Mecânicas reais (#37 — P0, ANTES DO JUICE)
+
+> **Status atual:** storyboards e reveals concluídos como estrutura; **nenhuma sala aprovada como experiência didática manipulável** até cumprir os critérios de #41.
+> A Room 6 (#9) tem diagramas, C# e 6 terminais; ainda precisa dos simuladores #39/#40.
+
+- [x] **P0** inventariar ao menos uma mecânica jogável por sala (documento `docs/INTERACTIVE-LEARNING.md`)
+- [x] **P0** criar épico e issues técnicas #37–#41
+- [ ] **P0** #38 contrato modular de demos, estado próprio e teardown ao sair/reset
+- [ ] **P0** #38 controles/fallback acessíveis sem conflitar com mouse-follow e atalhos
+- [ ] **P0** #39 Game Loop Play/Pause/Step/Reset e contador de frames visível
+- [ ] **P0** #39 FPS 30/60/120 e FixedUpdate simulado com acumulador e resultados comparáveis
+- [ ] **P0** #40 toggles de SpriteRenderer/Collider2D/Rigidbody2D com efeitos reais
+- [ ] **P0** #40 input → ação → física, gravidade/impulso manipuláveis e comparação A/B
+- [ ] **P0** #28 Room 1 regra alterável; Room 2 Pong curto; Room 3 hardware modelado; Room 4 montar 4 pilares
+- [ ] **P0** #29 Room 5 balancear loop; Room 7 alterar frames; Room 8 ouvir/ver mesmo hit com e sem SFX
+- [ ] **P0** #30 Room 9 pulo físico parametrizado; Room 10 alternar camadas; Final conquistas + Q&A
+- [ ] **P0** #41 testes de modelo, diferenças observáveis, reset, skip, 15 min e browser smoke
+
+**DoD:** estado/resultado mudam com parâmetros ou escolha; takeaway mostra a causa; reset/skip nunca bloqueiam palco. Unity/C# são exemplos didáticos; demos rodam em TS/Phaser.
+
+## Juiciness / Game Feel (#24 — somente após IL2 e mecânica aprovada)
 
 - [ ] **P1** antecipação visual do tiro, recoil, trail, hit flash e sparks
 - [ ] **P1** reveal com stagger curto e objetivo completo celebratório
@@ -152,7 +172,7 @@ Legenda:
 ## Entregas de rooms agrupadas
 
 - [ ] **P1** #28: Rooms 1–4 com conteúdo e interação
-- [ ] **P1** #9: Room 6 como referência completa (Programação / Engine)
+- [ ] **P1** #9: Room 6 como referência INTERATIVA completa — diagramas/terminais feitos; simuladores #39/#40 pendentes
 - [ ] **P1** #29: Rooms 5, 7, 8 (Game Design, Arte, Áudio)
 - [ ] **P1** #30: Rooms 9, 10, Final (Pulo, Protótipo, Q&A)
 
