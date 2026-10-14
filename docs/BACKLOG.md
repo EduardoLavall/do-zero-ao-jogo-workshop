@@ -117,8 +117,8 @@ Legenda:
 
 - [x] **P0** inventariar ao menos uma mecânica jogável por sala (documento `docs/INTERACTIVE-LEARNING.md`)
 - [x] **P0** criar épico e issues técnicas #37–#41
-- [ ] **P0** #38 contrato modular de demos, estado próprio e teardown ao sair/reset
-- [ ] **P0** #38 controles/fallback acessíveis sem conflitar com mouse-follow e atalhos
+- [x] **P0** #38 contrato modular de demos, estado próprio e teardown ao sair/reset (CI e smoke manual pendente)
+- [x] **P0** #38 controles/fallback acessíveis sem conflitar com mouse-follow e atalhos (D/ESC/E/N/P/R; smoke browser pendente)
 - [ ] **P0** #39 Game Loop Play/Pause/Step/Reset e contador de frames visível
 - [ ] **P0** #39 FPS 30/60/120 e FixedUpdate simulado com acumulador e resultados comparáveis
 - [ ] **P0** #40 toggles de SpriteRenderer/Collider2D/Rigidbody2D com efeitos reais
