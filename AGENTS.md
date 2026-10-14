@@ -87,6 +87,16 @@ Teclado não é a navegação principal do player. Ele existe como fallback de a
 9. arte
 10. áudio/polish
 
+## Regra obrigatória: Interactive Learning (issues #37–#41)
+
+- **Não declarar sala jogável/concluída só porque tem hotspots, reveal, código ou partículas.**
+- Para cada sala, entregar **pelo menos uma ação variável → simulação/modelo altera estado → consequência comparável na tela → takeaway**; consultar `docs/INTERACTIVE-LEARNING.md`.
+- Modelos didáticos em TS puro quando possível; a apresentação roda em Phaser. Unity/C# são referência de aula, nunca engine executada nem dependência.
+- A simulação precisa de reset, skip/teclado, valores limitados e teardown ao sair de sala; N/P/ESC/R não podem ficar presos.
+- Implementar uma vertical slice interativa de Room 6 (#38/#39/#40) antes de priorizar efeitos #24, sprites #25 e áudio #26.
+- Nas issues #28/#29/#30, exigir comparação de duas condições e observação real do resultado, não só painel DOM novo.
+- A validação pedagógica #41 e projetor #23 são obrigatórias antes de chamar todas as salas de prontas.
+
 ## Qualidade de produção para palco
 
 - Manter 1920×1080 lógico e FIT; validar a leitura também em 1280×720/1280×800 e projetor real.
