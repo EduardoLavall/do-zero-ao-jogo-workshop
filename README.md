@@ -38,6 +38,8 @@ Leia antes de implementar:
 8. [docs/AUDITORIA-PRONTIDAO.md](./docs/AUDITORIA-PRONTIDAO.md)
 9. [docs/PROJECAO-QA.md](./docs/PROJECAO-QA.md)
 10. [docs/ART-AUDIO-PRODUCTION.md](./docs/ART-AUDIO-PRODUCTION.md)
+11. [docs/STORYBOARDS.md](./docs/STORYBOARDS.md)
+12. [docs/CONTENT-PIPELINE.md](./docs/CONTENT-PIPELINE.md)
 
 ## Princípio do projeto
 
@@ -81,7 +83,7 @@ npm run test:watch
 
 ## Estado atual
 
-**Estado de protótipo técnico (2026-10-14)**: shell Phaser/Vite, player mouse-first, 2 rooms placeholder (01 vazia + 02 de testes), HotspotSystem e Arrow→reveal. **As 10 salas de conteúdo e o encerramento ainda não estão implementados**. UI DOM, sprites, áudio, assets e teste em projetor ainda faltam.
+**Estado de protótipo técnico (2026-10-14)**: shell Phaser/Vite, player mouse-first, 11 storyboards jogáveis com placeholders + laboratório técnico isolado, HotspotSystem e Arrow→reveal. **Os 11 storyboards estão navegáveis, mas a produção audiovisual e interações didáticas finais ainda está pendente**. UI DOM, sprites, áudio, assets e teste em projetor ainda faltam.
 
 **UI inicial (#8):** menu Enter, HUD, objetivo/progresso, overlay HTML/CSS alinhado ao canvas e fallback E. **Ainda falta validar #23** em projetor real e produzir as salas finais. Próximo: #27 (storyboards) e #9 (Room 6 vertical slice); depois #24/#25/#26 (juice/arte/SFX) e #28/#29/#30 (conteúdo). #20 Fase 2 é painel F2. #31 é hardening final.
 
@@ -94,13 +96,14 @@ npm run test:watch
 | R | Resetar sala e conteúdo |
 | E | Revelar o próximo hotspot disponível sem atirar |
 | H | Ajuda |
+| T | Entrar/sair do laboratório técnico de testes |
 | ESC | Fechar painel |
 | F | Tela cheia |
 | Botão esquerdo | Atirar (se gameplay não estiver pausado) |
 | Botão direito | Pular |
 | Botão do meio | Ativar/desativar controle do personagem |
 
-A Room 02 continua sendo um **laboratório de testes**, não a Room 2 definitiva do workshop. Painéis congelam o movimento do personagem enquanto abertos. A interface usa uma camada 1920×1080 que segue os bounds do canvas Phaser (FIT/letterbox).
+A sala **Room 02 agora é a etapa histórica do roteiro**. O laboratório de interações está isolado: use **T** para entrar e voltar sem alterar a sequência de 11 rooms. Painéis congelam o movimento do personagem enquanto abertos. A interface usa uma camada 1920×1080 que segue os bounds do canvas Phaser (FIT/letterbox).
 
 Produção e critérios: [Auditoria de prontidão](./docs/AUDITORIA-PRONTIDAO.md), [Guia de projeção](./docs/PROJECAO-QA.md) e [Plano de arte/áudio](./docs/ART-AUDIO-PRODUCTION.md).
 
@@ -138,3 +141,9 @@ No GitHub:
 `Settings → Pages → Build and deployment → Source → GitHub Actions`
 
 Observação: enquanto o repositório não possuir `package-lock.json`, o workflow usa `npm install`. Quando o lockfile for versionado, deve-se preferir `npm ci`.
+
+## Storyboard executável (issue #27)
+
+A apresentação agora contém **11 rooms data-driven** com objetivo de aprendizagem, composição, fala do apresentador, conteúdo de reveal, duração, placeholders, IDs de assets/áudio e referências. O fluxo completo ainda está em fase de **scaffold**, não slide final. Cada room preserva reveals quando revisitada; `R` reseta só a room atual. Pressione `E` para avançar a revelação e mostrar o takeaway ao terminar. `T` alterna a antiga sala de testes, fora do roteiro.
+
+Ver [Storyboards das 11 salas](./docs/STORYBOARDS.md) e [Pipeline de Conteúdo](./docs/CONTENT-PIPELINE.md). Próxima implementação: #9 Room 6 vertical slice. #23 (teste físico em projetor) permanece aberta.
