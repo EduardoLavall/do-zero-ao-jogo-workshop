@@ -406,8 +406,7 @@ export class PresentationScene extends Phaser.Scene {
     this.player.faceTarget(target.hotspot.x);
     this.inFlightRevealIds.add(target.hotspot.revealId);
 
-    let arrow: Arrow;
-    arrow = new Arrow(
+    const arrow = new Arrow(
       this,
       this.player.x,
       this.player.y - 12,
